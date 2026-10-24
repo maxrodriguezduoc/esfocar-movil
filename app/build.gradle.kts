@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.esforcaraplicacion"
+        applicationId = "com.example.esfocarapp"
         minSdk = 33
         targetSdk = 37
         versionCode = 1
