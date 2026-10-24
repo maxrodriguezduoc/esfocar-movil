@@ -1,12 +1,10 @@
 # App de Estudio y Autoevaluación – ESFOCAR (MVP académico)
 
-Asignatura: DSY1105 Desarrollo de Aplicaciones Móviles – Evaluación Parcial 2
-Integrantes: _Nombre Apellido_ y _Nombre Apellido_ (Equipo N°__)
+- Asignatura: DSY1105 Desarrollo de Aplicaciones Móviles – Evaluación Parcial 2
+- Integrantes: Maximiliano Rodriguez
 
 ## Descripción
-Aplicación Android para estudiantes en formación: permite estudiar por asignatura,
-resolver trivias de autoevaluación con retroalimentación inmediata, guardar apuntes
-personales y revisar el progreso. Funciona sin conexión (datos locales con Room).
+Aplicación Android para estudiantes en formación: permite estudiar por asignatura, resolver trivias de autoevaluación con retroalimentación inmediata, guardar apuntes personales y revisar el progreso. Funciona sin conexión (datos locales con Room).
 Todos los datos son ficticios.
 
 ## Funcionalidades implementadas
