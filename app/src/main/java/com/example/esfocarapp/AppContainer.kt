@@ -6,6 +6,7 @@ import com.example.esfocarapp.data.AppRepository
 import com.example.esfocarapp.data.ApuntesRepository
 import com.example.esfocarapp.data.ConceptosRepository
 import com.example.esfocarapp.data.ContenidoRepository
+import com.example.esfocarapp.data.GestionContenidoRepository
 import com.example.esfocarapp.data.ProgresoRepository
 import com.example.esfocarapp.data.ResultadosRepository
 import com.example.esfocarapp.data.Sincronizador
@@ -37,13 +38,16 @@ class AppContainer(private val context: Context) {
 
     val appRepository by lazy { AppRepository(db.usuarioDao(), db.documentoDao()) }
 
+    private val contenidosApi by lazy { RetrofitFactory.crear(BuildConfig.URL_CONTENIDOS, ContenidosApi::class.java) }
+
     val contenidoRepository by lazy {
-        ContenidoRepository(
-            db.contenidoDao(),
-            RetrofitFactory.crear(BuildConfig.URL_CONTENIDOS, ContenidosApi::class.java),
-            preferencias
-        ) { context.assets.open(ARCHIVO_CONTENIDO).bufferedReader().use { it.readText() } }
+        ContenidoRepository(db.contenidoDao(), contenidosApi, preferencias) {
+            context.assets.open(ARCHIVO_CONTENIDO).bufferedReader().use { it.readText() }
+        }
     }
+
+    // Modo docente: publicar preguntas y casos en ms-contenidos
+    val gestionContenidoRepository by lazy { GestionContenidoRepository(contenidosApi, contenidoRepository) }
 
     val resultadosRepository by lazy {
         ResultadosRepository(RetrofitFactory.crear(BuildConfig.URL_RESULTADOS, ResultadosApi::class.java))
@@ -84,6 +88,7 @@ class EsfocarApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Sesion.alias = container.preferencias.aliasSesion
+        Sesion.rol = container.preferencias.rolSesion
         PreferenciaTema.tema = container.preferencias.tema
         alcance.launch { container.contenidoRepository.asegurarContenidoInicial() }
         TrabajoSincronizacion.programar(this)

@@ -4,6 +4,7 @@ import com.example.esfocarapp.data.local.Documento
 import com.example.esfocarapp.data.local.DocumentoDao
 import com.example.esfocarapp.data.local.Usuario
 import com.example.esfocarapp.data.local.UsuarioDao
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Seguridad
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
@@ -18,16 +19,19 @@ class AppRepository(
 ) {
 
     // ---------- Usuarios ----------
-    suspend fun registrarUsuario(alias: String, clave: String): Boolean {
+    suspend fun registrarUsuario(alias: String, clave: String, rol: String = Rol.ESTUDIANTE): Boolean {
         if (usuarioDao.buscarPorAlias(alias) != null) return false   // ya existe
-        usuarioDao.insertar(Usuario(alias = alias, claveHash = Seguridad.hash(clave)))
+        usuarioDao.insertar(Usuario(alias = alias, claveHash = Seguridad.hash(clave), rol = rol))
         return true
     }
 
-    suspend fun iniciarSesion(alias: String, clave: String): Boolean {
+    // Devuelve el usuario si la clave es correcta (así se conoce su rol), o null si no
+    suspend fun autenticar(alias: String, clave: String): Usuario? {
         val usuario = usuarioDao.buscarPorAlias(alias)
-        return usuario != null && usuario.claveHash == Seguridad.hash(clave)
+        return usuario?.takeIf { it.claveHash == Seguridad.hash(clave) }
     }
+
+    suspend fun iniciarSesion(alias: String, clave: String): Boolean = autenticar(alias, clave) != null
 
     // ---------- Documentos (PDF / Word) ----------
     val documentos: Flow<List<Documento>> = documentoDao.todos()

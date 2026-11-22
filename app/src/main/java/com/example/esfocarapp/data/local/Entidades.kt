@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
 data class Usuario(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val alias: String,
-    val claveHash: String   // la contraseña nunca se guarda en texto plano
+    val claveHash: String,  // la contraseña nunca se guarda en texto plano
+    val rol: String = "ESTUDIANTE"
 )
 
 // ---------- Contenido académico (copia local del microservicio ms-contenidos) ----------

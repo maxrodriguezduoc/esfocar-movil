@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -23,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -119,6 +122,33 @@ fun LoginScreen(
                             error = vm.errorConfirmacion,
                             esClave = true
                         )
+                    }
+
+                    // Registro como docente (con código entregado por la institución)
+                    if (registro) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(Modifier.weight(1f)) {
+                                Text("Soy docente", style = MaterialTheme.typography.titleSmall)
+                                Text(
+                                    "Podrás publicar preguntas y casos",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(checked = vm.esDocente, onCheckedChange = vm::cambiarEsDocente)
+                        }
+                        AnimatedVisibility(visible = vm.esDocente) {
+                            CampoTexto(
+                                valor = vm.codigo,
+                                alCambiar = vm::cambiarCodigo,
+                                etiqueta = "Código de docente",
+                                icono = Icons.Default.Key,
+                                error = vm.errorCodigo
+                            )
+                        }
                     }
 
                     AnimatedVisibility(visible = vm.mensaje != null) {

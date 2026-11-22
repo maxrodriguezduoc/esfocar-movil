@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.Sincronizador
 import com.example.esfocarapp.ui.theme.PreferenciaTema
 import com.example.esfocarapp.util.Preferencias
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Tema
 import kotlinx.coroutines.launch
@@ -58,6 +59,8 @@ class AjustesViewModel(
 
     fun cerrarSesion() {
         Sesion.alias = null
+        Sesion.rol = Rol.ESTUDIANTE
         prefs.aliasSesion = null
+        prefs.rolSesion = Rol.ESTUDIANTE
     }
 }

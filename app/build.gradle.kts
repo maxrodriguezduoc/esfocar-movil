@@ -35,6 +35,8 @@ android {
         buildConfigField("String", "URL_APUNTES", "\"http://$backendHost:8081/\"")
         buildConfigField("String", "URL_RESULTADOS", "\"http://$backendHost:8082/\"")
         buildConfigField("String", "URL_CONTENIDOS", "\"http://$backendHost:8083/\"")
+        // Código ficticio para registrarse como docente (MVP académico; en producción lo entregaría la institución)
+        buildConfigField("String", "CODIGO_DOCENTE", "\"DOCENTE-ESFOCAR\"")
     }
 
     signingConfigs {

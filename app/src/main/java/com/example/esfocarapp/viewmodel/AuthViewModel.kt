@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.AppRepository
 import com.example.esfocarapp.util.Preferencias
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Validador
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 // Guarda el ESTADO (textos, errores) y la LÓGICA. La pantalla solo lo muestra.
 class AuthViewModel(
     private val repo: AppRepository,
-    private val prefs: Preferencias? = null
+    private val prefs: Preferencias? = null,
+    private val codigoDocente: String = ""
 ) : ViewModel() {
 
     // Valores de los campos
@@ -32,6 +34,14 @@ class AuthViewModel(
     var errorClave by mutableStateOf<String?>(null)
         private set
     var errorConfirmacion by mutableStateOf<String?>(null)
+        private set
+
+    // Registro como docente (requiere el código entregado a los docentes)
+    var esDocente by mutableStateOf(false)
+        private set
+    var codigo by mutableStateOf("")
+        private set
+    var errorCodigo by mutableStateOf<String?>(null)
         private set
 
     var mensaje by mutableStateOf<String?>(null)
@@ -58,6 +68,21 @@ class AuthViewModel(
         mensaje = null
     }
 
+    fun cambiarEsDocente(valor: Boolean) {
+        esDocente = valor
+        if (!valor) {
+            codigo = ""
+            errorCodigo = null
+        }
+        mensaje = null
+    }
+
+    fun cambiarCodigo(valor: String) {
+        codigo = valor
+        errorCodigo = Validador.codigoDocente(valor, codigoDocente)
+        mensaje = null
+    }
+
     // registro = true  -> crear cuenta nueva
     // registro = false -> iniciar sesión
     fun enviar(registro: Boolean, onExito: () -> Unit) {
@@ -65,8 +90,9 @@ class AuthViewModel(
         errorAlias = Validador.alias(alias)
         errorClave = Validador.clave(clave)
         errorConfirmacion = if (registro) Validador.confirmacion(clave, confirmacion) else null
+        errorCodigo = if (registro && esDocente) Validador.codigoDocente(codigo, codigoDocente) else null
 
-        if (errorAlias != null || errorClave != null || errorConfirmacion != null) {
+        if (errorAlias != null || errorClave != null || errorConfirmacion != null || errorCodigo != null) {
             mensaje = "Revisa los campos marcados"
             return
         }
@@ -75,15 +101,17 @@ class AuthViewModel(
         viewModelScope.launch {
             cargando = true
             if (registro) {
-                if (repo.registrarUsuario(alias, clave)) {
-                    iniciar()
+                val rol = if (esDocente) Rol.DOCENTE else Rol.ESTUDIANTE
+                if (repo.registrarUsuario(alias, clave, rol)) {
+                    iniciar(rol)
                     onExito()
                 } else {
                     mensaje = "Ese usuario ya existe"
                 }
             } else {
-                if (repo.iniciarSesion(alias, clave)) {
-                    iniciar()
+                val usuario = repo.autenticar(alias, clave)
+                if (usuario != null) {
+                    iniciar(usuario.rol)
                     onExito()
                 } else {
                     mensaje = "Usuario o contraseña incorrectos"
@@ -94,8 +122,10 @@ class AuthViewModel(
     }
 
     // La sesión queda guardada: al volver a abrir la app no se pide ingresar de nuevo
-    private fun iniciar() {
+    private fun iniciar(rol: String) {
         Sesion.alias = alias
+        Sesion.rol = rol
         prefs?.aliasSesion = alias
+        prefs?.rolSesion = rol
     }
 }

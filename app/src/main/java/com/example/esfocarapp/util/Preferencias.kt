@@ -9,6 +9,7 @@ enum class Tema { SISTEMA, CLARO, OSCURO }
 interface Preferencias {
     var onboardingVisto: Boolean
     var aliasSesion: String?
+    var rolSesion: String
     var versionContenido: Int
     var tema: Tema
 }
@@ -24,6 +25,10 @@ class PreferenciasAndroid(context: Context) : Preferencias {
     override var aliasSesion: String?
         get() = sp.getString("alias", null)
         set(valor) = sp.edit { if (valor == null) remove("alias") else putString("alias", valor) }
+
+    override var rolSesion: String
+        get() = sp.getString("rol", Rol.ESTUDIANTE) ?: Rol.ESTUDIANTE
+        set(valor) = sp.edit { putString("rol", valor) }
 
     override var versionContenido: Int
         get() = sp.getInt("version_contenido", 0)

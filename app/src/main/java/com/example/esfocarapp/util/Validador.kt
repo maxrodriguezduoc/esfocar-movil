@@ -45,6 +45,13 @@ object Validador {
         return null
     }
 
+    // El código docente es ficticio y se entrega a los docentes (ver README)
+    fun codigoDocente(valor: String, esperado: String): String? {
+        if (valor.isBlank()) return "Ingresa el código entregado a los docentes"
+        if (valor.trim() != esperado) return "Código de docente incorrecto"
+        return null
+    }
+
     fun termino(valor: String): String? {
         if (valor.isBlank()) return "Escribe un concepto a buscar"
         if (valor.trim().length < 2) return "Debe tener al menos 2 caracteres"
