@@ -138,6 +138,9 @@ Errores en formato `{"error": "mensaje"}`. Consola H2: `http://localhost:<puerto
 **Requisitos:** Android Studio (incluye JDK 17+ y SDK Android 37). Si el `java` del sistema es antiguo, usar el de Android Studio (`<Android Studio>/jbr`) como `JAVA_HOME`.
 
 ### Paso 1: microservicios
+**Forma rápida (Windows):** doble clic en **`iniciar-backend.bat`**, en la raíz del repositorio. El script compila y abre una ventana por cada microservicio. Para detenerlos, cierra esas ventanas o ejecuta **`detener-backend.bat`**.
+
+Forma manual:
 ```bash
 cd backend
 ./gradlew :ms-contenidos:bootRun     # terminal 1 → http://localhost:8083
