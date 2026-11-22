@@ -10,6 +10,15 @@ import retrofit2.http.Query
 
 // Cada interfaz describe los endpoints; Retrofit genera el código que hace la llamada HTTP.
 
+// Microservicio propio (Spring Boot) - puerto 8083: contenido académico para estudiar sin conexión
+interface ContenidosApi {
+    @GET("api/contenidos/version")
+    suspend fun version(): VersionDto
+
+    @GET("api/contenidos/paquete")
+    suspend fun paquete(): PaqueteDto
+}
+
 // Microservicio propio (Spring Boot) - puerto 8081
 interface ApuntesApi {
     @GET("api/apuntes")

@@ -2,8 +2,6 @@ package com.example.esfocarapp.data
 
 import com.example.esfocarapp.data.local.Documento
 import com.example.esfocarapp.data.local.DocumentoDao
-import com.example.esfocarapp.data.local.Intento
-import com.example.esfocarapp.data.local.IntentoDao
 import com.example.esfocarapp.data.local.Usuario
 import com.example.esfocarapp.data.local.UsuarioDao
 import com.example.esfocarapp.util.Seguridad
@@ -12,11 +10,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// Repositorio de los datos LOCALES (Room): usuarios, historial de trivias y documentos.
-// Los apuntes y los resultados en la nube tienen sus propios repositorios (red).
+// Repositorio de datos LOCALES (Room): usuarios y documentos.
 class AppRepository(
     private val usuarioDao: UsuarioDao,
-    private val intentoDao: IntentoDao,
     private val documentoDao: DocumentoDao,
     private val fechaActual: () -> String = ::fechaPorDefecto
 ) {
@@ -31,15 +27,6 @@ class AppRepository(
     suspend fun iniciarSesion(alias: String, clave: String): Boolean {
         val usuario = usuarioDao.buscarPorAlias(alias)
         return usuario != null && usuario.claveHash == Seguridad.hash(clave)
-    }
-
-    // ---------- Resultados de trivias (historial local) ----------
-    val intentos: Flow<List<Intento>> = intentoDao.todos()
-
-    suspend fun guardarIntento(actividad: String, aciertos: Int, total: Int) {
-        intentoDao.insertar(
-            Intento(actividad = actividad, aciertos = aciertos, total = total, fecha = fechaActual())
-        )
     }
 
     // ---------- Documentos (PDF / Word) ----------

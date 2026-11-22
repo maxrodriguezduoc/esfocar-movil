@@ -14,3 +14,6 @@
 # Retrofit + Gson: los objetos que viajan como JSON deben conservar sus nombres de campo
 -keepattributes Signature, *Annotation*
 -keep class com.example.esfocarapp.data.remote.** { *; }
+# Modelos guardados como JSON en Room (alternativas y opciones de casos)
+-keep class com.example.esfocarapp.model.** { *; }
+-keep class * extends com.google.gson.reflect.TypeToken

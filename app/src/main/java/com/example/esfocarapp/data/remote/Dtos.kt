@@ -2,6 +2,53 @@ package com.example.esfocarapp.data.remote
 
 // Objetos que viajan por la red (JSON). Los nombres coinciden con los de los microservicios.
 
+// ---------- Microservicio de contenidos (ms-contenidos) ----------
+data class VersionDto(val version: Int)
+
+data class PaqueteDto(val version: Int, val asignaturas: List<AsignaturaDto>)
+
+data class AsignaturaDto(
+    val id: Long,
+    val nombre: String,
+    val descripcion: String,
+    val icono: String,
+    val color: String,
+    val unidades: List<UnidadDto>
+)
+
+data class UnidadDto(
+    val id: Long,
+    val numero: Int,
+    val titulo: String,
+    val resumen: String,
+    val fichas: List<FichaDto>,
+    val preguntas: List<PreguntaDto>,
+    val casos: List<CasoDto>
+)
+
+data class FichaDto(val id: Long, val titulo: String, val contenido: String, val puntosClave: List<String>)
+
+data class AlternativaDto(val texto: String, val correcta: Boolean, val retroalimentacion: String)
+
+data class PreguntaDto(
+    val id: Long,
+    val enunciado: String,
+    val explicacion: String?,
+    val alternativas: List<AlternativaDto>
+)
+
+data class OpcionDto(val texto: String, val puntaje: Int, val retroalimentacion: String)
+
+data class CasoDto(
+    val id: Long,
+    val titulo: String,
+    val situacion: String,
+    val pregunta: String,
+    val dificultad: String,
+    val fundamento: String?,
+    val opciones: List<OpcionDto>
+)
+
 // ---------- Microservicio de apuntes (ms-apuntes) ----------
 data class ApunteRemoto(
     val id: Long,

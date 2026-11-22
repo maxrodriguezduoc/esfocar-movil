@@ -5,16 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// version = 3: los apuntes ahora viven en el microservicio, ya no en la base local
+// version = 4: contenido académico local (offline-first), progreso detallado, favoritos y apuntes sincronizables
 @Database(
-    entities = [Usuario::class, Intento::class, Documento::class],
-    version = 3,
+    entities = [
+        Usuario::class, AsignaturaEntity::class, UnidadEntity::class, FichaEntity::class,
+        PreguntaEntity::class, CasoEntity::class, Intento::class, RespuestaEntity::class,
+        Favorito::class, ApunteLocal::class, Documento::class
+    ],
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun usuarioDao(): UsuarioDao
-    abstract fun intentoDao(): IntentoDao
+    abstract fun contenidoDao(): ContenidoDao
+    abstract fun progresoDao(): ProgresoDao
+    abstract fun apunteDao(): ApunteDao
     abstract fun documentoDao(): DocumentoDao
 
     companion object {
@@ -29,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "esfocar.db"
                 )
-                    // Al subir de versión, recrea las tablas (suficiente para un MVP)
+                    // Al subir de versión, recrea las tablas (suficiente para un MVP académico)
                     .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                     .also { instancia = it }

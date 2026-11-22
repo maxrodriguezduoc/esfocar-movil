@@ -8,7 +8,7 @@ import java.io.IOException
 // Resultado de una llamada de red: o salió bien (Exito) o falló con un mensaje legible (Fallo)
 sealed class Respuesta<out T> {
     data class Exito<T>(val datos: T) : Respuesta<T>()
-    data class Fallo(val mensaje: String) : Respuesta<Nothing>()
+    data class Fallo(val mensaje: String, val codigo: Int? = null) : Respuesta<Nothing>()
 }
 
 // Ejecuta una llamada Retrofit y convierte los errores técnicos en mensajes para el usuario
@@ -19,7 +19,7 @@ suspend fun <T> llamarApi(
     return try {
         Respuesta.Exito(bloque())
     } catch (e: HttpException) {
-        Respuesta.Fallo(mensajeHttp(e.code(), e.response()?.errorBody()?.string(), noEncontrado))
+        Respuesta.Fallo(mensajeHttp(e.code(), e.response()?.errorBody()?.string(), noEncontrado), e.code())
     } catch (e: IOException) {
         Respuesta.Fallo("Sin conexión con el servidor")
     } catch (e: JsonParseException) {
