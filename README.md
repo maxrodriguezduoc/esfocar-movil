@@ -26,6 +26,7 @@ Los estudiantes en formación repasan con material estático (apuntes, documento
 | Repasar procedimientos con preguntas o trivias | **Trivia por unidad, por asignatura y trivia rápida**, con retroalimentación inmediata y explicación |
 | Prepararse para evaluaciones | **Simulacro con tiempo y nota 1.0–7.0** (60 % de exigencia) y revisión de errores al final |
 | Analizar situaciones simuladas y elegir cómo actuar | **Casos simulados**: actuación óptima / aceptable / incorrecta, con fundamento |
+| Resolver ejercicios y casos planteados por docentes | **Modo docente**: el docente publica, edita y elimina preguntas y casos desde la app; llegan a los estudiantes al sincronizar |
 | Recibir retroalimentación inmediata | Colores, vibración, explicación por pregunta y por opción de actuación |
 | Revisar resultados y avance | Racha de estudio, promedio, dominio por asignatura, temas débiles, **repaso de errores** e historial |
 
@@ -47,6 +48,16 @@ Los estudiantes en formación repasan con material estático (apuntes, documento
 - Panel con racha de días, promedio, mejor nota, casos resueltos y un gráfico de actividad de los últimos 7 días.
 - Dominio por asignatura y temas para reforzar (unidades con menos de 60 % de acierto).
 - Resumen que calcula el servidor e historial con el estado de sincronización de cada actividad.
+
+**Modo docente**
+- Registro como docente con un código institucional. En este MVP el código es ficticio: `DOCENTE-ESFOCAR`.
+- Panel docente: se elige asignatura y unidad, y se listan sus preguntas y casos.
+- Formularios para crear y editar:
+  - **Preguntas**: enunciado, explicación y de 2 a 5 alternativas, cada una con su retroalimentación. Se marca la correcta.
+  - **Casos simulados**: situación, pregunta, dificultad, fundamento y de 2 a 5 opciones calificadas como óptima, aceptable o incorrecta.
+- Eliminar pide confirmación.
+- Lo publicado se guarda en `ms-contenidos`, sube la versión del contenido y las apps de los estudiantes lo descargan al sincronizar.
+- Validación en el formulario con las mismas reglas del servidor. Publicar requiere conexión; si no hay, se avisa con un mensaje claro.
 
 **Herramientas**
 - Apuntes personales (CRUD) que funcionan sin conexión y se sincronizan al recuperarla.
@@ -76,7 +87,7 @@ Los estudiantes en formación repasan con material estático (apuntes, documento
 ### Offline-first (requisito 5.1 del caso)
 1. **La app siempre lee desde Room**, así que estudiar y autoevaluarse nunca depende de la red.
 2. En el primer uso, Room se llena con `assets/contenido_inicial.json`, que es el **mismo archivo** que usa `ms-contenidos` como semilla. La app funciona aunque nunca haya tenido internet.
-3. Con conexión, la app consulta `GET /api/contenidos/version`. Si un docente publicó cambios (la versión sube), descarga el paquete completo y lo reemplaza en una sola transacción.
+3. Con conexión, la app consulta `GET /api/contenidos/version`. Si la versión del servidor es distinta de la local (por ejemplo, porque un docente publicó cambios), descarga el paquete completo y lo reemplaza en una sola transacción.
 4. Los apuntes y resultados se guardan al instante en el teléfono con estado *pendiente*. **WorkManager** los sube a los microservicios cuando hay red, aunque la app esté cerrada.
 5. Si un apunte editado fue borrado en el servidor, se vuelve a crear para no perder la edición. Si se borró desde otro dispositivo, desaparece del teléfono.
 
@@ -107,7 +118,7 @@ docs/              Capturas y verificación de firma
 | POST | `/api/unidades/{unidadId}/casos` | Docente crea un caso (dificultad BASICA, MEDIA o AVANZADA; al menos una actuación con puntaje 2) |
 | PUT / DELETE | `/api/casos/{id}` | Docente edita o elimina un caso |
 
-Cada cambio de un docente sube la versión, y las apps lo descargan en la siguiente sincronización.
+La app los usa desde el **panel docente**. Cada cambio de un docente sube la versión, y las apps lo descargan en la siguiente sincronización.
 
 ### 4.2 `ms-apuntes` (puerto 8081): apuntes personales
 | Método | Ruta | Respuesta |
@@ -154,27 +165,29 @@ O bien `./gradlew bootJar` y `java -jar ms-<servicio>/build/libs/ms-<servicio>.j
 2. **Emulador:** ejecutar (Run). La app usa `10.0.2.2` para llegar al PC.
 3. **Teléfono real** en la misma red Wi-Fi: `./gradlew assembleRelease -PbackendHost=192.168.X.X` (IP del PC) y permitir Java en el firewall.
 4. En Android 17 (API 37), aceptar el permiso **"Dispositivos cercanos / red local"**, necesario para llegar a los microservicios.
+5. **Para probar el modo docente:** en "Crear cuenta", activar **"Soy docente"** e ingresar el código `DOCENTE-ESFOCAR`. El panel aparece en la pestaña **Cuenta**.
 
 > Los microservicios **no son necesarios para estudiar**: sin ellos la app funciona completa y sincroniza después.
 
 ### Paso 3: pruebas
 ```bash
-./gradlew :app:testDebugUnitTest     # 145 pruebas (JUnit 4 + MockK + coroutines-test + MockWebServer)
+./gradlew :app:testDebugUnitTest     # 175 pruebas (JUnit 4 + MockK + coroutines-test + MockWebServer)
 ./gradlew :app:jacocoReporte         # cobertura → app/build/reports/jacoco/jacocoReporte/html/index.html
 cd backend && ./gradlew test         # 19 pruebas de los 3 microservicios (MockMvc + H2 en memoria)
 ```
 
 | Métrica (JaCoCo, lógica de la app) | Resultado |
 |---|---|
-| Líneas | **97,6 %** |
-| Instrucciones | 90,0 % |
-| Ramas | 84,6 % |
+| Líneas | **99,4 %** |
+| Instrucciones | 94,0 % |
+| Ramas | 88,2 % |
 
 Qué se prueba:
 - Reglas del dominio: nota, racha, dominio y caso del día.
 - Contenido incluido: cada pregunta tiene una sola respuesta correcta y cada caso una actuación óptima.
 - Sincronización offline-first de apuntes, incluidos los conflictos.
 - Contratos HTTP con MockWebServer.
+- Modo docente: validaciones, publicación, errores del servidor y sin conexión, y formularios.
 - Todos los ViewModels.
 
 Se excluyen de la medición las pantallas Compose y el código que depende directamente de Android.
@@ -193,6 +206,8 @@ Se excluyen de la medición las pantallas Compose y el código que depende direc
 | Configuración de firma | [`keystore.properties`](keystore.properties) + `signingConfigs` en [`app/build.gradle.kts`](app/build.gradle.kts) |
 | Verificación (`apksigner`, `keytool`) | [`docs/firma-apk.txt`](docs/firma-apk.txt) |
 
+La base de datos local migra de la versión 4 a la 5 (se agrega el rol de usuario) sin perder usuarios, progreso ni apuntes.
+
 El APK se verifica con la firma v2 (`Verified using v2 scheme: true`) y el certificado `CN=Esfocar App, OU=DSY1105, O=Duoc UC`. Se probó en el emulador (Android 17) con los microservicios apagados (estudio completo y apuntes guardados en el teléfono) y luego encendidos (los apuntes y resultados quedaron en las bases de datos de los microservicios).
 
 > ⚠️ **Solo académico:** la llave y sus contraseñas se versionan porque la rúbrica lo exige. En un proyecto productivo nunca se suben al repositorio.
@@ -207,9 +222,9 @@ El APK se verifica con la firma v2 (`Verified using v2 scheme: true`) y el certi
 |---|---|---|---|
 | ![](docs/img/06-trivia.png) | ![](docs/img/07-caso-simulado.png) | ![](docs/img/08-progreso.png) | ![](docs/img/09-modo-oscuro.png) |
 
-| Inicio de sesión | Apuntes sin conexión |
-|---|---|
-| ![](docs/img/02-login.png) | ![](docs/img/10-apuntes-sin-conexion.png) |
+| Inicio de sesión | Apuntes sin conexión | Registro como docente | Panel docente |
+|---|---|---|---|
+| ![](docs/img/02-login.png) | ![](docs/img/10-apuntes-sin-conexion.png) | ![](docs/img/11-registro-docente.png) | ![](docs/img/12-panel-docente.png) |
 
 ## 8. Tecnologías
 
