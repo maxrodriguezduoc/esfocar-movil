@@ -21,8 +21,9 @@ import com.google.gson.reflect.TypeToken
 object MapeoContenido {
 
     val gson = Gson()
-    private val tipoAlternativas = object : TypeToken<List<Alternativa>>() {}.type
-    private val tipoOpciones = object : TypeToken<List<OpcionCaso>>() {}.type
+    // getParameterized no depende de firmas genéricas, por lo que sigue funcionando tras la optimización de R8
+    private val tipoAlternativas = TypeToken.getParameterized(List::class.java, Alternativa::class.java).type
+    private val tipoOpciones = TypeToken.getParameterized(List::class.java, OpcionCaso::class.java).type
 
     fun leerPaquete(json: String): PaqueteDto = gson.fromJson(json, PaqueteDto::class.java)
 
