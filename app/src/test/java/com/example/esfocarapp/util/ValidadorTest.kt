@@ -1,4 +1,4 @@
-package com.example.esfocarapp
+package com.example.esfocarapp.util
 
 import com.example.esfocarapp.util.Validador
 import org.junit.Assert.assertNotNull
