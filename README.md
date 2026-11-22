@@ -1,152 +1,218 @@
-# ESFOCAR – App de Estudio y Autoevaluación
+# ESFOCAR Estudio
 
-- **Asignatura:** DSY1105 Desarrollo de Aplicaciones Móviles – Evaluación Parcial 4 (Encargo, parejas)
-- **Integrantes:** Maximiliano Rodriguez · _[nombre de la pareja]_
-- **Tablero Trello:** _[pegar enlace del tablero]_
+**App de estudio, repaso, autoevaluación y análisis de casos para estudiantes en formación de la Escuela de Formación de Carabineros (ESFOCAR).**
 
-## 1. Descripción y contexto
+| | |
+|---|---|
+| Asignatura | DSY1105 Desarrollo de Aplicaciones Móviles – Examen Final Transversal |
+| Caso | 004D · *Repaso, autoevaluación y análisis de casos aplicados para estudiantes en formación* |
+| Integrante | Maximiliano Rodriguez (desarrollo individual, autorizado) |
+| Planificación | Tablero Trello: _[pegar enlace]_ |
+| Versión | 2.0 (`versionCode 2`) |
 
-Aplicación Android para estudiantes en formación: permite estudiar por asignatura, resolver trivias de autoevaluación con retroalimentación inmediata, guardar apuntes personales y revisar el progreso. Todos los datos son ficticios.
+> Todo el contenido (normas, protocolos, preguntas y casos) es **ficticio y de uso académico**. No se usan datos personales reales ni se conecta a sistemas institucionales.
 
-Esta entrega continúa el MVP de la Evaluación Parcial 2 y agrega: **consumo de API externa (Retrofit)**, **dos microservicios propios en Spring Boot con base de datos**, **pruebas unitarias (94 % de cobertura de la lógica)** y **APK release firmado**.
+---
+
+## 1. Problema y propuesta
+
+Los estudiantes en formación repasan con material estático (apuntes, documentos, presentaciones), sin ejercicios interactivos ni retroalimentación inmediata. Además, parte del estudio ocurre en terreno, con **conectividad limitada o nula**.
+
+**ESFOCAR Estudio** es una herramienta complementaria que funciona **sin internet desde el primer uso** y permite:
+
+| Necesidad del caso (3.1) | Cómo la resuelve la app |
+|---|---|
+| Estudiar normativa y contenidos por unidad o asignatura | Asignaturas → unidades → **fichas de estudio** con puntos clave, búsqueda y fichas guardadas |
+| Repasar procedimientos con preguntas o trivias | **Trivia por unidad, por asignatura y trivia rápida**, con retroalimentación inmediata y explicación |
+| Prepararse para evaluaciones | **Simulacro con tiempo y nota 1.0–7.0** (60 % de exigencia) y revisión de errores al final |
+| Analizar situaciones simuladas y elegir cómo actuar | **Casos simulados**: actuación óptima / aceptable / incorrecta, con fundamento |
+| Recibir retroalimentación inmediata | Colores, vibración, explicación por pregunta y por opción de actuación |
+| Revisar resultados y avance | Racha de estudio, promedio, dominio por asignatura, temas débiles, **repaso de errores** e historial |
 
 ## 2. Funcionalidades
 
-| Funcionalidad | Dónde viven los datos |
-|---|---|
-| Registro, inicio y cierre de sesión (formularios validados) | Local (Room, clave con hash SHA-256) |
-| Trivias con retroalimentación inmediata y puntaje | Local + **se sincroniza** con `ms-resultados` |
-| **Apuntes personales: crear, listar, editar y eliminar (CRUD)** | **Microservicio `ms-apuntes`** |
-| **Resumen de progreso** (intentos, promedio, mejor resultado) | **Microservicio `ms-resultados`** |
-| **Explorar conceptos** (resumen de un artículo) | **API externa: Wikipedia** |
-| Carga, visualización y eliminación de documentos PDF/Word | Local (Room + selector del sistema) |
-| Historial de actividades, recordatorio con notificación, vibración | Local / recursos nativos |
+**Estudio**
+- Bienvenida (onboarding) y pantalla de inicio (splash) con el emblema institucional.
+- Registro e inicio de sesión con validación por campo; la sesión se recuerda.
+- 4 asignaturas, 9 unidades, 18 fichas de estudio, 45 preguntas y 12 casos simulados.
+- Búsqueda en las fichas y marcadores para guardarlas.
 
-Si no hay conexión, la app lo informa con un mensaje claro ("Sin conexión con el servidor") y el historial local de trivias y los documentos siguen disponibles.
+**Autoevaluación**
+- Trivia por unidad, por asignatura o rápida (10 preguntas al azar). Las preguntas y alternativas se mezclan en cada intento.
+- Simulacro de evaluación: 15 preguntas, 10 minutos, nota con escala chilena y resultado aprobado o reprobado.
+- Repaso de errores: reúne las preguntas cuya última respuesta fue incorrecta y las quita al responderlas bien.
+- Casos simulados con filtros por dificultad y por pendientes, más un caso del día en el inicio.
+
+**Progreso**
+- Panel con racha de días, promedio, mejor nota, casos resueltos y un gráfico de actividad de los últimos 7 días.
+- Dominio por asignatura y temas para reforzar (unidades con menos de 60 % de acierto).
+- Resumen que calcula el servidor e historial con el estado de sincronización de cada actividad.
+
+**Herramientas**
+- Apuntes personales (CRUD) que funcionan sin conexión y se sincronizan al recuperarla.
+- Documentos PDF y Word guardados en el teléfono.
+- Explorar conceptos con Wikipedia (API externa).
+- Recordatorio por notificación.
+- Tema claro, oscuro o el del sistema.
+- Sincronización manual y automática con WorkManager.
 
 ## 3. Arquitectura
 
 ```
-┌────────────────────────── App Android (Kotlin + Compose) ──────────────────────────┐
-│ ui/  →  viewmodel/  →  data/ (repositorios)  →  Room (local)                         │
-│                                              →  Retrofit ─┬─► ms-apuntes    :8081   │
-│                                                           ├─► ms-resultados :8082   │
-│                                                           └─► Wikipedia (https)     │
-└──────────────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────── App Android (Kotlin · Jetpack Compose · Material 3) ─────────────────────────────┐
+│  ui/ (pantallas)  →  viewmodel/ (estado y lógica, MVVM)  →  data/ (repositorios)                               │
+│                                                              │                                                 │
+│                                       ┌──────────────────────┴───────────────────────┐                         │
+│                                       ▼                                              ▼                         │
+│                         Room / SQLite (fuente de verdad local)         Retrofit + OkHttp                       │
+│                         contenido · progreso · apuntes · favoritos      │                                      │
+│                                       ▲                                 ├─► ms-contenidos  :8083 (H2)          │
+│                  WorkManager (sincroniza al haber internet) ────────────├─► ms-apuntes     :8081 (H2)          │
+│                                                                         ├─► ms-resultados  :8082 (H2)          │
+│                                                                         └─► Wikipedia REST (API externa)       │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- `app/` – app móvil (MVVM + Repositorio). Los ViewModels reciben sus repositorios por constructor (`viewmodel/Fabrica.kt`, `AppContainer.kt`), lo que permite probarlos con MockK.
-- `backend/ms-apuntes` y `backend/ms-resultados` – microservicios Spring Boot 3 (Java 17) con Spring Data JPA y base de datos **H2 en archivo** (persistente, sin instalar nada).
-- `release/` – APK firmado. `app/esfocar-release.jks` + `keystore.properties` – llave y configuración de firma.
+### Offline-first (requisito 5.1 del caso)
+1. **La app siempre lee desde Room**, así que estudiar y autoevaluarse nunca depende de la red.
+2. En el primer uso, Room se llena con `assets/contenido_inicial.json`, que es el **mismo archivo** que usa `ms-contenidos` como semilla. La app funciona aunque nunca haya tenido internet.
+3. Con conexión, la app consulta `GET /api/contenidos/version`. Si un docente publicó cambios (la versión sube), descarga el paquete completo y lo reemplaza en una sola transacción.
+4. Los apuntes y resultados se guardan al instante en el teléfono con estado *pendiente*. **WorkManager** los sube a los microservicios cuando hay red, aunque la app esté cerrada.
+5. Si un apunte editado fue borrado en el servidor, se vuelve a crear para no perder la edición. Si se borró desde otro dispositivo, desaparece del teléfono.
+
+```
+app/src/main/java/com/example/esfocarapp/
+├── data/          ContenidoRepository, ProgresoRepository, ApuntesRepository, Sincronizador (+WorkManager)
+│   ├── local/     Room: entidades, DAOs, AppDatabase (v4)
+│   └── remote/    Retrofit: APIs, DTOs, manejo de errores (Respuesta)
+├── model/         Modelos del dominio y reglas puras: nota, racha, dominio, caso del día
+├── viewmodel/     Auth, Estudio, Quiz, Caso, Progreso, Apuntes, Ajustes, Documentos, Conceptos + Fabrica
+├── ui/            Pantallas Compose y sistema de componentes (ui/components) y tema (ui/theme)
+└── util/          Validaciones, seguridad, preferencias, conexión, vibración, notificaciones
+backend/           Microservicios Spring Boot 3 (Java 17): ms-contenidos, ms-apuntes, ms-resultados
+release/           APK firmado
+docs/              Capturas y verificación de firma
+```
 
 ## 4. Endpoints
 
-### 4.1 Microservicio `ms-apuntes` (puerto 8081)
-
-| Método | Ruta | Descripción | Respuesta |
-|---|---|---|---|
-| GET | `/api/apuntes?alias={alias}` | Lista los apuntes del usuario | 200 |
-| GET | `/api/apuntes/{id}` | Obtiene un apunte | 200 / 404 |
-| POST | `/api/apuntes` | Crea un apunte | 201 / 400 |
-| PUT | `/api/apuntes/{id}` | Actualiza un apunte | 200 / 400 / 404 |
-| DELETE | `/api/apuntes/{id}` | Elimina un apunte | 204 / 404 |
-
-Cuerpo POST/PUT: `{"alias":"cadete_01","titulo":"Protocolo","contenido":"Texto de al menos 10 caracteres"}`.
-Validaciones: título 3–40 caracteres, contenido 10–2000, alias obligatorio (máx. 15). Errores: `{"error":"mensaje"}`.
-
-### 4.2 Microservicio `ms-resultados` (puerto 8082)
-
-| Método | Ruta | Descripción | Respuesta |
-|---|---|---|---|
-| POST | `/api/resultados` | Registra el resultado de una trivia | 201 / 400 |
-| GET | `/api/resultados?alias={alias}` | Lista los resultados del usuario | 200 |
-| GET | `/api/resultados/resumen?alias={alias}` | Intentos, promedio % y mejor % | 200 |
-| DELETE | `/api/resultados/{id}` | Elimina un resultado | 204 / 404 |
-
-Cuerpo POST: `{"alias":"cadete_01","actividad":"Trivia rápida","aciertos":2,"total":3}` (aciertos ≤ total).
-
-Consola de la base de datos (H2): `http://localhost:8081/h2-console` y `http://localhost:8082/h2-console`
-(JDBC URL `jdbc:h2:file:./data/apuntes-db` o `./data/resultados-db`, usuario `sa`, sin contraseña).
-
-### 4.3 API externa: Wikipedia (consumida con Retrofit)
-
-| Método | URL | Uso en la app |
+### 4.1 `ms-contenidos` (puerto 8083): contenido académico
+| Método | Ruta | Uso |
 |---|---|---|
-| GET | `https://es.wikipedia.org/api/rest_v1/page/summary/{titulo}` | Pantalla **Explorar conceptos**: muestra título, descripción y resumen |
+| GET | `/api/contenidos/version` | Versión actual del contenido (la app la compara con la suya) |
+| GET | `/api/contenidos/paquete` | Todo el contenido: asignaturas → unidades → fichas, preguntas y casos |
+| GET | `/api/asignaturas/{id}` | Una asignatura con su contenido |
+| POST | `/api/unidades/{unidadId}/preguntas` | Docente crea una pregunta (2–5 alternativas, exactamente 1 correcta) |
+| PUT / DELETE | `/api/preguntas/{id}` | Docente edita o elimina una pregunta |
+| POST | `/api/unidades/{unidadId}/casos` | Docente crea un caso (dificultad BASICA, MEDIA o AVANZADA; al menos una actuación con puntaje 2) |
+| PUT / DELETE | `/api/casos/{id}` | Docente edita o elimina un caso |
 
-API pública, sin llave. Si el artículo no existe (404) la app muestra "No se encontró un artículo…". No interfiere con los datos locales ni con los microservicios (solo lectura).
+Cada cambio de un docente sube la versión, y las apps lo descargan en la siguiente sincronización.
 
-## 5. Pasos para ejecutar
+### 4.2 `ms-apuntes` (puerto 8081): apuntes personales
+| Método | Ruta | Respuesta |
+|---|---|---|
+| GET | `/api/apuntes?alias={alias}` | 200 |
+| GET | `/api/apuntes/{id}` | 200 / 404 |
+| POST | `/api/apuntes` | 201 / 400 |
+| PUT | `/api/apuntes/{id}` | 200 / 400 / 404 |
+| DELETE | `/api/apuntes/{id}` | 204 / 404 |
 
-### Requisitos
-- Android Studio (incluye JDK 17+ y SDK Android 37) · Internet (Gradle y Wikipedia).
-- El `java` del sistema puede ser antiguo: usa el JDK de Android Studio (`<Android Studio>/jbr`) como `JAVA_HOME`.
+### 4.3 `ms-resultados` (puerto 8082): resultados de actividades
+| Método | Ruta | Respuesta |
+|---|---|---|
+| POST | `/api/resultados` | 201 / 400 (aciertos ≤ total) |
+| GET | `/api/resultados?alias={alias}` | 200 |
+| GET | `/api/resultados/resumen?alias={alias}` | 200: intentos, promedio %, mejor % |
+| DELETE | `/api/resultados/{id}` | 204 / 404 |
 
-### Paso 1 – Levantar los microservicios
+Errores en formato `{"error": "mensaje"}`. Consola H2: `http://localhost:<puerto>/h2-console` (usuario `sa`, sin contraseña; JDBC `jdbc:h2:file:./data/<servicio>-db`).
+
+### 4.4 API externa: Wikipedia
+| Método | URL | Uso |
+|---|---|---|
+| GET | `https://es.wikipedia.org/api/rest_v1/page/summary/{titulo}` | Pantalla *Explorar conceptos*: solo lectura, no toca los datos locales ni los microservicios |
+
+## 5. Cómo ejecutar
+
+**Requisitos:** Android Studio (incluye JDK 17+ y SDK Android 37). Si el `java` del sistema es antiguo, usar el de Android Studio (`<Android Studio>/jbr`) como `JAVA_HOME`.
+
+### Paso 1: microservicios
 ```bash
 cd backend
-./gradlew :ms-apuntes:bootRun      # terminal 1 → http://localhost:8081
-./gradlew :ms-resultados:bootRun   # terminal 2 → http://localhost:8082
+./gradlew :ms-contenidos:bootRun     # terminal 1 → http://localhost:8083
+./gradlew :ms-apuntes:bootRun        # terminal 2 → http://localhost:8081
+./gradlew :ms-resultados:bootRun     # terminal 3 → http://localhost:8082
 ```
-(o `./gradlew bootJar` y luego `java -jar ms-apuntes/build/libs/ms-apuntes.jar`).
-Las bases de datos se crean solas en `backend/<servicio>/data/` (o en la carpeta desde donde se ejecuta el `.jar`).
+O bien `./gradlew bootJar` y `java -jar ms-<servicio>/build/libs/ms-<servicio>.jar`.
 
-### Paso 2 – Ejecutar la app
-1. Abrir la carpeta raíz del repositorio con Android Studio y esperar la sincronización de Gradle.
-2. **Emulador:** ejecutar (Run). La app usa `10.0.2.2` para llegar a los microservicios del PC.
-3. **Teléfono real:** conectar el teléfono a la misma red Wi‑Fi y compilar indicando la IP del PC:
-   `./gradlew assembleRelease -PbackendHost=192.168.X.X` (permitir Java en el firewall de Windows).
-4. Crear una cuenta (alias ficticio y contraseña de 6+ caracteres con letras y números).
-5. En Android 17 (API 37) la app pide el permiso **"Dispositivos cercanos / red local"**: aceptar, es necesario para conectarse a los microservicios.
+### Paso 2: app
+1. Abrir la carpeta raíz con Android Studio y sincronizar Gradle.
+2. **Emulador:** ejecutar (Run). La app usa `10.0.2.2` para llegar al PC.
+3. **Teléfono real** en la misma red Wi-Fi: `./gradlew assembleRelease -PbackendHost=192.168.X.X` (IP del PC) y permitir Java en el firewall.
+4. En Android 17 (API 37), aceptar el permiso **"Dispositivos cercanos / red local"**, necesario para llegar a los microservicios.
 
-### Paso 3 – Pruebas unitarias y cobertura
+> Los microservicios **no son necesarios para estudiar**: sin ellos la app funciona completa y sincroniza después.
+
+### Paso 3: pruebas
 ```bash
-./gradlew :app:testDebugUnitTest      # 87 pruebas (JUnit + MockK + coroutines-test + MockWebServer)
-./gradlew :app:jacocoReporte          # cobertura → app/build/reports/jacoco/jacocoReporte/html/index.html
-cd backend && ./gradlew test          # 11 pruebas de los microservicios (MockMvc + H2 en memoria)
+./gradlew :app:testDebugUnitTest     # 145 pruebas (JUnit 4 + MockK + coroutines-test + MockWebServer)
+./gradlew :app:jacocoReporte         # cobertura → app/build/reports/jacoco/jacocoReporte/html/index.html
+cd backend && ./gradlew test         # 19 pruebas de los 3 microservicios (MockMvc + H2 en memoria)
 ```
-Resultado medido: **94,4 % de líneas** y 89,3 % de instrucciones sobre la lógica (ViewModels, repositorios, validaciones, capa de red). Se excluyen pantallas Compose y código que depende del sistema Android (notificaciones, vibración, base de datos generada).
 
-### Paso 4 – Generar el APK firmado (release)
+| Métrica (JaCoCo, lógica de la app) | Resultado |
+|---|---|
+| Líneas | **97,6 %** |
+| Instrucciones | 90,0 % |
+| Ramas | 84,6 % |
+
+Qué se prueba:
+- Reglas del dominio: nota, racha, dominio y caso del día.
+- Contenido incluido: cada pregunta tiene una sola respuesta correcta y cada caso una actuación óptima.
+- Sincronización offline-first de apuntes, incluidos los conflictos.
+- Contratos HTTP con MockWebServer.
+- Todos los ViewModels.
+
+Se excluyen de la medición las pantallas Compose y el código que depende directamente de Android.
+
+### Paso 4: APK firmado
 ```bash
-./gradlew :app:assembleRelease
-# → app/build/outputs/apk/release/app-release.apk  (copia lista en release/esfocar-release.apk)
+./gradlew :app:assembleRelease       # → app/build/outputs/apk/release/app-release.apk
 ```
-La firma se configura en `app/build.gradle.kts` (`signingConfigs.release`) leyendo `keystore.properties`.
 
-## 6. APK firmado y llave (.jks)
+## 6. APK firmado y llave
 
 | Elemento | Ubicación |
 |---|---|
-| APK firmado | [`release/esfocar-release.apk`](release/esfocar-release.apk) |
-| Llave (keystore) | [`app/esfocar-release.jks`](app/esfocar-release.jks) (alias `esfocar`) |
-| Configuración de firma | [`keystore.properties`](keystore.properties) y `signingConfigs` en [`app/build.gradle.kts`](app/build.gradle.kts) |
+| APK firmado (release, R8) | [`release/esfocar-release.apk`](release/esfocar-release.apk) |
+| Llave | [`app/esfocar-release.jks`](app/esfocar-release.jks) (alias `esfocar`, RSA 2048) |
+| Configuración de firma | [`keystore.properties`](keystore.properties) + `signingConfigs` en [`app/build.gradle.kts`](app/build.gradle.kts) |
 | Verificación (`apksigner`, `keytool`) | [`docs/firma-apk.txt`](docs/firma-apk.txt) |
 
-El APK verifica con esquema de firma v2 (`Verified using v2 scheme: true`), certificado `CN=Esfocar App, OU=DSY1105, O=Duoc UC`, RSA 2048.
+El APK se verifica con la firma v2 (`Verified using v2 scheme: true`) y el certificado `CN=Esfocar App, OU=DSY1105, O=Duoc UC`. Se probó en el emulador (Android 17) con los microservicios apagados (estudio completo y apuntes guardados en el teléfono) y luego encendidos (los apuntes y resultados quedaron en las bases de datos de los microservicios).
 
-> ⚠️ **Solo académico:** la llave y sus contraseñas se versionan porque la rúbrica lo exige. En un proyecto real nunca se suben al repositorio.
+> ⚠️ **Solo académico:** la llave y sus contraseñas se versionan porque la rúbrica lo exige. En un proyecto productivo nunca se suben al repositorio.
 
-### Capturas de la app (APK release en emulador)
+## 7. Capturas
 
-| Inicio de sesión | API externa (Wikipedia) | CRUD de apuntes (microservicio) |
-|---|---|---|
-| ![login](docs/img/01-login.png) | ![conceptos](docs/img/02-conceptos-api-externa.png) | ![apuntes](docs/img/03-apuntes-microservicio.png) |
+| Bienvenida | Inicio | Estudiar | Ficha de estudio |
+|---|---|---|---|
+| ![](docs/img/01-bienvenida.png) | ![](docs/img/03-inicio.png) | ![](docs/img/04-estudiar.png) | ![](docs/img/05-ficha.png) |
 
-## 7. Estructura del repositorio
+| Trivia con retroalimentación | Caso simulado | Progreso | Modo oscuro |
+|---|---|---|---|
+| ![](docs/img/06-trivia.png) | ![](docs/img/07-caso-simulado.png) | ![](docs/img/08-progreso.png) | ![](docs/img/09-modo-oscuro.png) |
 
-```
-app/                       App Android
-  src/main/.../data/       Room, repositorios y capa de red (data/remote: Retrofit)
-  src/main/.../viewmodel/  ViewModels + Fabrica
-  src/main/.../ui/         Pantallas Jetpack Compose
-  src/test/                Pruebas unitarias
-backend/                   Microservicios Spring Boot (ms-apuntes, ms-resultados)
-release/                   APK firmado
-docs/                      Evidencias (capturas, verificación de firma)
-```
+| Inicio de sesión | Apuntes sin conexión |
+|---|---|
+| ![](docs/img/02-login.png) | ![](docs/img/10-apuntes-sin-conexion.png) |
 
-## 8. Trabajo en equipo (GitHub y Trello)
+## 8. Tecnologías
 
-- Flujo con ramas `feat/...` y Pull Requests hacia `main`; cada integrante trabaja con su propia cuenta y sus commits quedan visibles en el historial.
-- Planificación y distribución de tareas en Trello (enlace arriba).
+Kotlin, Jetpack Compose, Material Design 3, Navigation Compose, MVVM, Room, Retrofit + OkHttp + Gson, WorkManager, Splash Screen API, Coroutines y Flow. En el servidor: Spring Boot 3, Spring Data JPA, Bean Validation y H2. Pruebas con JUnit, MockK, MockWebServer, JaCoCo y MockMvc. El APK release se optimiza con R8.
+
+## 9. Trabajo y planificación
+
+- Desarrollo individual, con commits por funcionalidad en ramas `feat/...` integradas por Pull Request.
+- Planificación de tareas por hito en Trello (enlace arriba).

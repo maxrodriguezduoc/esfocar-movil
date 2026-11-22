@@ -1,4 +1,4 @@
-== apksigner verify (release/esfocar-release.apk) ==
+== apksigner verify --print-certs release/esfocar-release.apk ==
 
 Verifies
 Verified using v1 scheme (JAR signing): false
@@ -18,5 +18,5 @@ Signer #1 public key SHA-256 digest: 48a3a0713bd049f4629aeb39b12e57979828d9c0ae8
 Signer #1 public key SHA-1 digest: 3d001b6a7bbd20e03733f8b7c4058ba2bdb7905c
 Signer #1 public key MD5 digest: 1734467a63ff69910119c18d7d926813
 
-== keytool -list (app/esfocar-release.jks) ==
+== keytool -list -v -keystore app/esfocar-release.jks ==
 Nombre de Alias: esfocar
