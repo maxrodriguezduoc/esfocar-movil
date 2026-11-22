@@ -1,2 +1,2 @@
 rootProject.name = "esfocar-backend"
-include("ms-apuntes", "ms-resultados")
+include("ms-apuntes", "ms-resultados", "ms-contenidos")
