@@ -2,11 +2,16 @@ package com.example.esfocarapp.viewmodel
 
 import com.example.esfocarapp.MainDispatcherRule
 import com.example.esfocarapp.data.ApuntesRepository
-import com.example.esfocarapp.data.remote.ApunteRemoto
+import com.example.esfocarapp.data.local.ApunteLocal
+import com.example.esfocarapp.data.local.EstadoSync
 import com.example.esfocarapp.data.remote.Respuesta
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -19,16 +24,17 @@ class ApuntesViewModelTest {
     @get:Rule
     val mainRule = MainDispatcherRule()
 
-    private val repo = mockk<ApuntesRepository>()
+    private val repo = mockk<ApuntesRepository>(relaxed = true)
     private var alias: String? = "cadete_01"
     private lateinit var vm: ApuntesViewModel
 
-    private val apunte = ApunteRemoto(1, "cadete_01", "Protocolo", "Revisar el protocolo antes", "01-01-2026 10:00")
+    private val apunte = ApunteLocal(1, 50, "cadete_01", "Protocolo", "Revisar el protocolo antes", "x", EstadoSync.SINCRONIZADO)
 
     @Before
     fun preparar() {
+        every { repo.apuntes("cadete_01") } returns flowOf(listOf(apunte))
+        coEvery { repo.sincronizar(any()) } returns Respuesta.Exito(0)
         vm = ApuntesViewModel(repo) { alias }
-        coEvery { repo.listar(any()) } returns Respuesta.Exito(listOf(apunte))
     }
 
     private fun llenarFormulario() {
@@ -37,28 +43,12 @@ class ApuntesViewModelTest {
     }
 
     @Test
-    fun cargar_trae_los_apuntes_del_servidor() {
-        vm.cargar()
-        assertEquals(listOf(apunte), vm.apuntes)
+    fun la_lista_viene_del_repositorio_local() = runTest {
+        assertEquals(listOf(apunte), vm.apuntes.first { it.isNotEmpty() })
     }
 
     @Test
-    fun cargar_con_error_muestra_mensaje() {
-        coEvery { repo.listar(any()) } returns Respuesta.Fallo("Sin conexión con el servidor")
-        vm.cargar()
-        assertEquals("Sin conexión con el servidor", vm.mensaje)
-        assertEquals(emptyList<ApunteRemoto>(), vm.apuntes)
-    }
-
-    @Test
-    fun cargar_sin_sesion_no_llama_al_servidor() {
-        alias = null
-        vm.cargar()
-        coVerify(exactly = 0) { repo.listar(any()) }
-    }
-
-    @Test
-    fun guardar_con_datos_invalidos_no_llama_al_servidor() {
+    fun guardar_con_datos_invalidos_no_guarda() {
         vm.guardar()
         assertNotNull(vm.errorTitulo)
         assertNotNull(vm.errorContenido)
@@ -74,78 +64,60 @@ class ApuntesViewModelTest {
     }
 
     @Test
-    fun guardar_crea_el_apunte_limpia_el_formulario_y_recarga() {
-        coEvery { repo.crear(any(), any(), any()) } returns Respuesta.Exito(apunte)
+    fun guardar_crea_local_limpia_y_sincroniza() {
         llenarFormulario()
-
         vm.guardar()
 
         coVerify { repo.crear("cadete_01", "Mi apunte", "Contenido de al menos diez caracteres") }
+        coVerify { repo.sincronizar("cadete_01") }
         assertEquals("Apunte guardado", vm.mensaje)
         assertEquals("", vm.titulo)
-        assertEquals("", vm.contenido)
-        assertEquals(1, vm.apuntes.size)
+        assertEquals("Sincronizado con el servidor", vm.estadoSync)
     }
 
     @Test
-    fun guardar_con_error_del_servidor_conserva_el_formulario() {
-        coEvery { repo.crear(any(), any(), any()) } returns Respuesta.Fallo("Error del servidor (500)")
+    fun sin_conexion_queda_guardado_en_el_telefono() {
+        coEvery { repo.sincronizar(any()) } returns Respuesta.Fallo("Sin conexión con el servidor")
         llenarFormulario()
-
         vm.guardar()
-
-        assertEquals("Error del servidor (500)", vm.mensaje)
-        assertEquals("Mi apunte", vm.titulo)
+        assertEquals("Apunte guardado", vm.mensaje)
+        assertEquals("Guardado en el teléfono. Se sincronizará al recuperar la conexión.", vm.estadoSync)
     }
 
     @Test
-    fun editar_y_guardar_actualiza_el_apunte() {
-        coEvery { repo.actualizar(any(), any(), any(), any()) } returns Respuesta.Exito(apunte)
-
+    fun editar_y_guardar_actualiza() {
         vm.editar(apunte)
-        assertEquals(1L, vm.editandoId)
+        assertEquals(apunte, vm.editando)
         assertEquals("Protocolo", vm.titulo)
 
         vm.cambiarTitulo("Protocolo editado")
         vm.guardar()
 
-        coVerify { repo.actualizar(1L, "cadete_01", "Protocolo editado", "Revisar el protocolo antes") }
+        coVerify { repo.actualizar(apunte, "Protocolo editado", "Revisar el protocolo antes") }
         assertEquals("Apunte actualizado", vm.mensaje)
-        assertNull(vm.editandoId)
+        assertNull(vm.editando)
     }
 
     @Test
     fun cancelar_edicion_limpia_el_formulario() {
         vm.editar(apunte)
         vm.cancelarEdicion()
-        assertNull(vm.editandoId)
-        assertEquals("", vm.titulo)
+        assertNull(vm.editando)
+        assertEquals("", vm.contenido)
     }
 
     @Test
-    fun borrar_elimina_y_recarga() {
-        coEvery { repo.eliminar(1L) } returns Respuesta.Exito(Unit)
-
+    fun borrar_elimina_y_si_estaba_en_edicion_limpia() {
+        vm.editar(apunte)
         vm.borrar(apunte)
-
-        coVerify { repo.eliminar(1L) }
+        coVerify { repo.eliminar(apunte) }
+        assertNull(vm.editando)
         assertEquals("Apunte eliminado", vm.mensaje)
     }
 
     @Test
-    fun borrar_el_apunte_en_edicion_limpia_el_formulario() {
-        coEvery { repo.eliminar(1L) } returns Respuesta.Exito(Unit)
-        vm.editar(apunte)
-
-        vm.borrar(apunte)
-
-        assertNull(vm.editandoId)
-    }
-
-    @Test
-    fun borrar_con_error_muestra_mensaje() {
-        coEvery { repo.eliminar(any()) } returns Respuesta.Fallo("El apunte ya no existe")
-        vm.borrar(apunte)
-        assertEquals("El apunte ya no existe", vm.mensaje)
+    fun sincronizar_manual() {
+        vm.sincronizar()
+        coVerify { repo.sincronizar("cadete_01") }
     }
 }

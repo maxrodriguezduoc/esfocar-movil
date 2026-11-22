@@ -8,6 +8,9 @@ import com.example.esfocarapp.data.remote.ResultadoSolicitud
 import com.example.esfocarapp.data.remote.ResultadosApi
 import com.example.esfocarapp.data.remote.RetrofitFactory
 import com.example.esfocarapp.data.remote.WikipediaApi
+import com.example.esfocarapp.data.remote.ContenidosApi
+import com.example.esfocarapp.data.remote.llamarApi
+import com.example.esfocarapp.Datos
 import com.google.gson.JsonParseException
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -37,56 +40,49 @@ class RedRepositoriosTest {
         HttpException(Response.error<Any>(codigo, cuerpo.toResponseBody("application/json".toMediaType())))
 
     @Test
-    fun apuntes_listar_devuelve_exito() = runBlocking {
+    fun llamada_exitosa_devuelve_los_datos() = runBlocking {
         coEvery { apuntesApi.listar("cadete_01") } returns emptyList()
-        val r = ApuntesRepository(apuntesApi).listar("cadete_01")
-        assertTrue(r is Respuesta.Exito)
+        assertEquals(Respuesta.Exito(emptyList<Any>()), llamarApi { apuntesApi.listar("cadete_01") })
     }
 
     @Test
-    fun apuntes_crear_y_actualizar_envian_los_datos() = runBlocking {
+    fun sin_conexion_y_404_se_traducen_a_mensajes() = runBlocking {
         val solicitud = ApunteSolicitud("cadete_01", "T", "Contenido largo")
         coEvery { apuntesApi.crear(solicitud) } throws IOException("sin red")
         coEvery { apuntesApi.actualizar(5L, solicitud) } throws errorHttp(404)
 
-        val repo = ApuntesRepository(apuntesApi)
-        assertEquals(Respuesta.Fallo("Sin conexión con el servidor"), repo.crear("cadete_01", "T", "Contenido largo"))
-        assertEquals(Respuesta.Fallo("El apunte ya no existe"), repo.actualizar(5L, "cadete_01", "T", "Contenido largo"))
-    }
-
-    @Test
-    fun apuntes_eliminar_con_exito() = runBlocking {
-        coEvery { apuntesApi.eliminar(3L) } returns Unit
-        assertEquals(Respuesta.Exito(Unit), ApuntesRepository(apuntesApi).eliminar(3L))
+        assertEquals(Respuesta.Fallo("Sin conexión con el servidor"), llamarApi { apuntesApi.crear(solicitud) })
+        assertEquals(
+            Respuesta.Fallo("El apunte ya no existe", 404),
+            llamarApi("El apunte ya no existe") { apuntesApi.actualizar(5L, solicitud) }
+        )
     }
 
     @Test
     fun error_400_usa_el_mensaje_del_servidor() = runBlocking {
         coEvery { apuntesApi.crear(any()) } throws errorHttp(400, """{"error":"El título es obligatorio"}""")
-        val r = ApuntesRepository(apuntesApi).crear("a", "", "x")
-        assertEquals(Respuesta.Fallo("El título es obligatorio"), r)
+        assertEquals(Respuesta.Fallo("El título es obligatorio", 400), llamarApi { apuntesApi.crear(ApunteSolicitud("a", "", "x")) })
     }
 
     @Test
     fun error_400_sin_detalle_usa_mensaje_generico() = runBlocking {
         coEvery { apuntesApi.crear(any()) } throws errorHttp(400, "no es json")
-        val r = ApuntesRepository(apuntesApi).crear("a", "", "x")
-        assertEquals(Respuesta.Fallo("Los datos enviados no son válidos"), r)
+        assertEquals(
+            Respuesta.Fallo("Los datos enviados no son válidos", 400),
+            llamarApi { apuntesApi.crear(ApunteSolicitud("a", "", "x")) }
+        )
     }
 
     @Test
     fun error_500_muestra_el_codigo() = runBlocking {
         coEvery { apuntesApi.listar(any()) } throws errorHttp(500)
-        assertEquals(Respuesta.Fallo("Error del servidor (500)"), ApuntesRepository(apuntesApi).listar("x"))
+        assertEquals(Respuesta.Fallo("Error del servidor (500)", 500), llamarApi { apuntesApi.listar("x") })
     }
 
     @Test
     fun json_invalido_se_informa_al_usuario() = runBlocking {
         coEvery { apuntesApi.listar(any()) } throws JsonParseException("malo")
-        assertEquals(
-            Respuesta.Fallo("El servidor envió una respuesta inesperada"),
-            ApuntesRepository(apuntesApi).listar("x")
-        )
+        assertEquals(Respuesta.Fallo("El servidor envió una respuesta inesperada"), llamarApi { apuntesApi.listar("x") })
     }
 
     @Test
@@ -109,7 +105,7 @@ class RedRepositoriosTest {
 
         val repo = ConceptosRepository(wikipediaApi)
         assertEquals(Respuesta.Exito(concepto), repo.buscar("  Anatomía "))
-        assertEquals(Respuesta.Fallo("No se encontró un artículo para \"zzz\""), repo.buscar("zzz"))
+        assertEquals(Respuesta.Fallo("No se encontró un artículo para \"zzz\"", 404), repo.buscar("zzz"))
         coVerify { wikipediaApi.resumen("Anatomía") }
     }
 }
@@ -213,19 +209,31 @@ class RetrofitContratoTest {
     @Test
     fun el_repositorio_traduce_un_404_real() = runBlocking {
         servidor.enqueue(MockResponse().setResponseCode(404).setBody("""{"error":"no existe"}"""))
-        val repo = ApuntesRepository(RetrofitFactory.crear(url(), ApuntesApi::class.java))
+        val api = RetrofitFactory.crear(url(), ApuntesApi::class.java)
 
-        val r = repo.eliminar(99L)
+        val r = llamarApi("El apunte ya no existe") { api.eliminar(99L) }
 
-        assertEquals(Respuesta.Fallo("El apunte ya no existe"), r)
+        assertEquals(Respuesta.Fallo("El apunte ya no existe", 404), r)
     }
 
     @Test
     fun sin_servidor_el_repositorio_informa_falta_de_conexion() = runBlocking {
         val direccion = url()
         servidor.shutdown()
-        val repo = ApuntesRepository(RetrofitFactory.crear(direccion, ApuntesApi::class.java))
+        val repo = ResultadosRepository(RetrofitFactory.crear(direccion, ResultadosApi::class.java))
 
         assertEquals(Respuesta.Fallo("Sin conexión con el servidor"), repo.listar("a"))
+    }
+
+    @Test
+    fun contenidos_consulta_version_y_paquete() = runBlocking {
+        servidor.enqueue(MockResponse().setBody("""{"version":3}"""))
+        servidor.enqueue(MockResponse().setBody(Datos.contenidoIncluido()))
+        val api = RetrofitFactory.crear(url(), ContenidosApi::class.java)
+
+        assertEquals(3, api.version().version)
+        assertEquals(4, api.paquete().asignaturas.size)
+        assertEquals("/api/contenidos/version", servidor.takeRequest().path)
+        assertEquals("/api/contenidos/paquete", servidor.takeRequest().path)
     }
 }

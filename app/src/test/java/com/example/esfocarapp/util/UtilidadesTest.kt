@@ -1,6 +1,5 @@
 package com.example.esfocarapp.util
 
-import com.example.esfocarapp.data.FakeData
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
@@ -44,21 +43,6 @@ class SesionTest {
         assertEquals("cadete_01", Sesion.alias)
         Sesion.alias = null
         assertNull(Sesion.alias)
-    }
-}
-
-class FakeDataTest {
-    @Test
-    fun cada_pregunta_tiene_exactamente_una_respuesta_correcta() {
-        FakeData.preguntas.forEach { pregunta ->
-            assertEquals(1, pregunta.alternativas.count { it.esCorrecta })
-        }
-    }
-
-    @Test
-    fun hay_asignaturas_con_datos() {
-        assertTrue(FakeData.asignaturas.isNotEmpty())
-        assertNotNull(FakeData.asignaturas.first().nombre)
     }
 }
 

@@ -3,11 +3,9 @@ package com.example.esfocarapp.viewmodel
 import com.example.esfocarapp.MainDispatcherRule
 import com.example.esfocarapp.data.AppRepository
 import com.example.esfocarapp.data.ConceptosRepository
-import com.example.esfocarapp.data.ResultadosRepository
 import com.example.esfocarapp.data.local.Documento
 import com.example.esfocarapp.data.remote.ConceptoRemoto
 import com.example.esfocarapp.data.remote.Respuesta
-import com.example.esfocarapp.data.remote.ResumenRemoto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -20,46 +18,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
-
-class ProgresoViewModelTest {
-
-    @get:Rule
-    val mainRule = MainDispatcherRule()
-
-    private val repo = mockk<AppRepository>().also { every { it.intentos } returns flowOf(emptyList()) }
-    private val resultados = mockk<ResultadosRepository>()
-
-    @Test
-    fun cargar_resumen_exitoso() {
-        val resumen = ResumenRemoto("cadete_01", 3, 66.7, 100)
-        coEvery { resultados.resumen("cadete_01") } returns Respuesta.Exito(resumen)
-        val vm = ProgresoViewModel(repo, resultados) { "cadete_01" }
-
-        vm.cargarResumen()
-
-        assertEquals(resumen, vm.resumen)
-        assertNull(vm.errorNube)
-        assertFalse(vm.cargandoNube)
-    }
-
-    @Test
-    fun cargar_resumen_con_error() {
-        coEvery { resultados.resumen(any()) } returns Respuesta.Fallo("Sin conexión con el servidor")
-        val vm = ProgresoViewModel(repo, resultados) { "cadete_01" }
-
-        vm.cargarResumen()
-
-        assertNull(vm.resumen)
-        assertEquals("Sin conexión con el servidor", vm.errorNube)
-    }
-
-    @Test
-    fun sin_sesion_no_consulta_el_servidor() {
-        val vm = ProgresoViewModel(repo, resultados) { null }
-        vm.cargarResumen()
-        coVerify(exactly = 0) { resultados.resumen(any()) }
-    }
-}
 
 class DocumentosViewModelTest {
 

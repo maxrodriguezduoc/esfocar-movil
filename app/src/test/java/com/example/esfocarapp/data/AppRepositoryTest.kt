@@ -2,8 +2,6 @@ package com.example.esfocarapp.data
 
 import com.example.esfocarapp.data.local.Documento
 import com.example.esfocarapp.data.local.DocumentoDao
-import com.example.esfocarapp.data.local.Intento
-import com.example.esfocarapp.data.local.IntentoDao
 import com.example.esfocarapp.data.local.Usuario
 import com.example.esfocarapp.data.local.UsuarioDao
 import com.example.esfocarapp.util.Seguridad
@@ -21,9 +19,8 @@ import org.junit.Test
 class AppRepositoryTest {
 
     private val usuarioDao = mockk<UsuarioDao>(relaxed = true)
-    private val intentoDao = mockk<IntentoDao>(relaxed = true).also { every { it.todos() } returns flowOf(emptyList()) }
     private val documentoDao = mockk<DocumentoDao>(relaxed = true).also { every { it.todos() } returns flowOf(emptyList()) }
-    private val repo = AppRepository(usuarioDao, intentoDao, documentoDao) { "19-11-2026 10:00" }
+    private val repo = AppRepository(usuarioDao, documentoDao) { "19-11-2026 10:00" }
 
     @Test
     fun registrar_usuario_nuevo_guarda_la_clave_con_hash() = runBlocking {
@@ -65,12 +62,6 @@ class AppRepositoryTest {
     }
 
     @Test
-    fun guardar_intento_agrega_la_fecha() = runBlocking {
-        repo.guardarIntento("Trivia", 2, 3)
-        coVerify { intentoDao.insertar(Intento(actividad = "Trivia", aciertos = 2, total = 3, fecha = "19-11-2026 10:00")) }
-    }
-
-    @Test
     fun guardar_y_borrar_documento() = runBlocking {
         repo.guardarDocumento("guia.pdf", "content://x", "application/pdf", 10L)
         coVerify {
@@ -85,13 +76,13 @@ class AppRepositoryTest {
     }
 
     @Test
-    fun los_flujos_vienen_de_los_dao() = runBlocking {
-        val intento = Intento(1, "Trivia", 1, 2, "x")
-        every { intentoDao.todos() } returns flowOf(listOf(intento))
-        val repo2 = AppRepository(usuarioDao, intentoDao, documentoDao)
-        var recibido: List<Intento> = emptyList()
-        repo2.intentos.collect { recibido = it }
-        assertEquals(listOf(intento), recibido)
+    fun el_flujo_de_documentos_viene_del_dao() = runBlocking {
+        val documento = Documento(1, "guia.pdf", "content://x", "application/pdf", 10L, "x")
+        every { documentoDao.todos() } returns flowOf(listOf(documento))
+        val repo2 = AppRepository(usuarioDao, documentoDao)
+        var recibido: List<Documento> = emptyList()
+        repo2.documentos.collect { recibido = it }
+        assertEquals(listOf(documento), recibido)
     }
 
     @Test

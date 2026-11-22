@@ -1,6 +1,7 @@
 package com.example.esfocarapp.viewmodel
 
 import com.example.esfocarapp.MainDispatcherRule
+import com.example.esfocarapp.PreferenciasFalsas
 import com.example.esfocarapp.data.AppRepository
 import com.example.esfocarapp.util.Sesion
 import io.mockk.coEvery
@@ -23,11 +24,13 @@ class AuthViewModelTest {
 
     private val repo = mockk<AppRepository>(relaxed = true)
     private lateinit var vm: AuthViewModel
+    private lateinit var prefs: PreferenciasFalsas
 
     @Before
     fun preparar() {
         Sesion.alias = null
-        vm = AuthViewModel(repo)
+        prefs = PreferenciasFalsas()
+        vm = AuthViewModel(repo, prefs)
     }
 
     @After
@@ -80,6 +83,7 @@ class AuthViewModelTest {
 
         assertTrue(exito)
         assertEquals("cadete_01", Sesion.alias)
+        assertEquals("cadete_01", prefs.aliasSesion)       // la sesión queda recordada
         assertFalse(vm.cargando)
     }
 
