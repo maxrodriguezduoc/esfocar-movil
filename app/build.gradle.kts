@@ -27,13 +27,14 @@ android {
         applicationId = "com.example.esfocarapp"
         minSdk = 33
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "URL_APUNTES", "\"http://$backendHost:8081/\"")
         buildConfigField("String", "URL_RESULTADOS", "\"http://$backendHost:8082/\"")
+        buildConfigField("String", "URL_CONTENIDOS", "\"http://$backendHost:8083/\"")
     }
 
     signingConfigs {
@@ -86,6 +87,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.work:work-runtime-ktx:2.10.1")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -117,8 +121,10 @@ tasks.register<JacocoReport>("jacocoReporte") {
     val excluidos = listOf(
         "**/ui/**", "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/*ComposableSingletons*",
         "**/*_Impl*", "**/MainActivity*", "**/EsfocarApp*", "**/AppContainer*",
-        "**/data/local/AppDatabase*", "**/data/local/Daos*", "**/data/remote/Apis*",
+        "**/data/local/AppDatabase*", "**/data/local/*Dao*", "**/data/remote/Apis*",
         "**/util/Notificaciones*", "**/util/Vibracion*", "**/viewmodel/Fabrica*",
+        "**/util/MonitorConexion*", "**/util/PreferenciasAndroid*", "**/data/TrabajoSincronizacion*",
+        "**/util/Documentos*", "**/util/DatosArchivo*",
         "**/data/remote/Dtos*", "**/model/**"
     )
     classDirectories.setFrom(

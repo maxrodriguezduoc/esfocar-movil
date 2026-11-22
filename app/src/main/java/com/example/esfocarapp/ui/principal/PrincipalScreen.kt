@@ -5,11 +5,19 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Insights
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Quiz
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Insights
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Quiz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -17,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,32 +34,29 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.esfocarapp.data.FakeData
-import com.example.esfocarapp.data.local.Intento
-import com.example.esfocarapp.ui.asignaturas.AsignaturasContent
 import com.example.esfocarapp.ui.components.AppTopBar
-import com.example.esfocarapp.ui.components.ItemMenu
+import com.example.esfocarapp.ui.estudio.EstudiarContent
+import com.example.esfocarapp.ui.inicio.InicioContent
+import com.example.esfocarapp.ui.mas.MasContent
+import com.example.esfocarapp.ui.navigation.Navegacion
+import com.example.esfocarapp.ui.practica.PracticarContent
 import com.example.esfocarapp.ui.progreso.ProgresoContent
-import com.example.esfocarapp.ui.trivia.TriviaContent
+import com.example.esfocarapp.viewmodel.AjustesViewModel
+import com.example.esfocarapp.viewmodel.EstudioViewModel
 import com.example.esfocarapp.viewmodel.Fabrica
 import com.example.esfocarapp.viewmodel.ProgresoViewModel
-import com.example.esfocarapp.viewmodel.TriviaViewModel
 
-// Las 3 opciones de la barra inferior
-private enum class Destino(val titulo: String, val etiqueta: String, val icono: ImageVector) {
-    Estudiar("Estudio y Autoevaluación", "Estudiar", Icons.Default.Home),
-    Trivia("Trivia rápida", "Trivia", Icons.Default.Star),
-    Progreso("Mi progreso", "Progreso", Icons.Default.CheckCircle)
+// Las 5 secciones de la barra inferior
+private enum class Seccion(val titulo: String, val etiqueta: String, val icono: ImageVector, val iconoActivo: ImageVector) {
+    Inicio("Inicio", "Inicio", Icons.Outlined.Home, Icons.Rounded.Home),
+    Estudiar("Estudiar", "Estudiar", Icons.AutoMirrored.Outlined.MenuBook, Icons.AutoMirrored.Rounded.MenuBook),
+    Practicar("Practicar", "Practicar", Icons.Outlined.Quiz, Icons.Rounded.Quiz),
+    Progreso("Mi progreso", "Progreso", Icons.Outlined.Insights, Icons.Rounded.Insights),
+    Mas("Mi cuenta", "Cuenta", Icons.Outlined.Person, Icons.Rounded.Person)
 }
 
 @Composable
-fun PrincipalScreen(
-    onAsignatura: (Int) -> Unit,
-    onApuntes: () -> Unit,
-    onDocumentos: () -> Unit,
-    onConceptos: () -> Unit,
-    onCerrarSesion: () -> Unit
-) {
+fun PrincipalScreen(nav: Navegacion) {
     val context = LocalContext.current
 
     // Desde Android 17 (API 37) conectarse a los microservicios en la red local requiere este permiso
@@ -66,58 +70,47 @@ fun PrincipalScreen(
         }
     }
 
-    val destinos = Destino.values()
-    var seleccionado by rememberSaveable { mutableIntStateOf(0) }
+    val secciones = Seccion.entries
+    var seleccionada by rememberSaveable { mutableIntStateOf(0) }
 
-    val triviaVm: TriviaViewModel = viewModel(factory = Fabrica.Proveedor)
     val progresoVm: ProgresoViewModel = viewModel(factory = Fabrica.Proveedor)
-    val intentos by progresoVm.intentos.collectAsState(initial = emptyList<Intento>())
-
-    // Opciones del menú de tres puntos de la barra superior
-    val opcionesMenu = listOf(
-        ItemMenu("Explorar conceptos", onConceptos),
-        ItemMenu("Documentos", onDocumentos),
-        ItemMenu("Mis apuntes", onApuntes),
-        ItemMenu("Cerrar sesión", onCerrarSesion)
-    )
+    val estudioVm: EstudioViewModel = viewModel(factory = Fabrica.Proveedor)
+    val ajustesVm: AjustesViewModel = viewModel(factory = Fabrica.Proveedor)
 
     Scaffold(
-        topBar = { AppTopBar(destinos[seleccionado].titulo, menu = opcionesMenu) },
+        // El contenido se dibuja de borde a borde: la barra superior y la inferior manejan sus márgenes
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        topBar = {
+            // El inicio tiene su propio encabezado de marca
+            if (secciones[seleccionada] != Seccion.Inicio) AppTopBar(secciones[seleccionada].titulo)
+        },
         bottomBar = {
             NavigationBar {
-                destinos.forEachIndexed { posicion, destino ->
+                secciones.forEachIndexed { posicion, s ->
+                    val activa = seleccionada == posicion
                     NavigationBarItem(
-                        selected = seleccionado == posicion,
-                        onClick = { seleccionado = posicion },
-                        icon = { Icon(destino.icono, contentDescription = destino.etiqueta) },
-                        label = { Text(destino.etiqueta) }
+                        selected = activa,
+                        onClick = { seleccionada = posicion },
+                        icon = { Icon(if (activa) s.iconoActivo else s.icono, contentDescription = s.etiqueta) },
+                        label = { Text(s.etiqueta) }
                     )
                 }
             }
         }
     ) { padding ->
-        // Animación: al cambiar de pestaña el contenido se desvanece suavemente
-        Crossfade(
-            targetState = seleccionado,
-            modifier = Modifier.padding(padding),
-            label = "cambio de pestaña"
-        ) { posicion ->
-            when (destinos[posicion]) {
-                Destino.Estudiar -> AsignaturasContent(
-                    asignaturas = FakeData.asignaturas,
-                    actividadesCompletadas = intentos.size,
-                    onAsignatura = onAsignatura,
-                    onApuntes = onApuntes,
-                    onDocumentos = onDocumentos,
-                    onConceptos = onConceptos
+        Crossfade(targetState = seleccionada, modifier = Modifier.padding(padding), label = "seccion") { posicion ->
+            when (secciones[posicion]) {
+                Seccion.Inicio -> InicioContent(
+                    vm = progresoVm,
+                    estudio = estudioVm,
+                    nav = nav,
+                    irAEstudiar = { seleccionada = Seccion.Estudiar.ordinal },
+                    irAProgreso = { seleccionada = Seccion.Progreso.ordinal }
                 )
-                Destino.Trivia -> TriviaContent(
-                    vm = triviaVm,
-                    actividad = "Trivia rápida",
-                    textoFinal = "Reintentar",
-                    onFinal = { }
-                )
-                Destino.Progreso -> ProgresoContent(intentos = intentos, vm = progresoVm)
+                Seccion.Estudiar -> EstudiarContent(vm = estudioVm, nav = nav)
+                Seccion.Practicar -> PracticarContent(estudio = estudioVm, progreso = progresoVm, nav = nav)
+                Seccion.Progreso -> ProgresoContent(vm = progresoVm, nav = nav)
+                Seccion.Mas -> MasContent(vm = ajustesVm, nav = nav)
             }
         }
     }
