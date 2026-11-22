@@ -29,11 +29,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.esfocarapp.ui.components.AppTopBar
 import com.example.esfocarapp.ui.components.LogoEsfocar
 import com.example.esfocarapp.util.vibrar
+import com.example.esfocarapp.viewmodel.Fabrica
 import com.example.esfocarapp.viewmodel.TriviaViewModel
 
 // Pantalla completa de trivia (se abre al tocar una asignatura)
 @Composable
-fun TriviaScreen(titulo: String, onBack: () -> Unit, vm: TriviaViewModel = viewModel()) {
+fun TriviaScreen(titulo: String, onBack: () -> Unit, vm: TriviaViewModel = viewModel(factory = Fabrica.Proveedor)) {
     Scaffold(topBar = { AppTopBar(titulo, onBack = onBack) }) { padding ->
         TriviaContent(
             vm = vm,
@@ -79,6 +80,7 @@ fun TriviaContent(
                 "Puntaje: ${vm.aciertos} de ${vm.preguntas.size}",
                 style = MaterialTheme.typography.titleLarge
             )
+            vm.avisoNube?.let { Text(it, style = MaterialTheme.typography.labelLarge) }
             Button(
                 onClick = {
                     vm.reiniciar()

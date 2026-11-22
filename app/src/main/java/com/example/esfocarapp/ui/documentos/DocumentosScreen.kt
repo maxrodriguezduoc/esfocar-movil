@@ -36,15 +36,21 @@ import com.example.esfocarapp.ui.components.AppTopBar
 import com.example.esfocarapp.util.Documentos
 import com.example.esfocarapp.util.Validador
 import com.example.esfocarapp.viewmodel.DocumentosViewModel
+import com.example.esfocarapp.viewmodel.Fabrica
 
 @Composable
-fun DocumentosScreen(onBack: () -> Unit, vm: DocumentosViewModel = viewModel()) {
+fun DocumentosScreen(onBack: () -> Unit, vm: DocumentosViewModel = viewModel(factory = Fabrica.Proveedor)) {
     val context = LocalContext.current
     val documentos by vm.documentos.collectAsState(initial = emptyList<Documento>())
 
     // Selector de archivos del teléfono (no necesita permisos de almacenamiento)
     val selector = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) vm.agregar(uri)
+        if (uri != null) {
+            val datos = Documentos.leerDatos(context, uri)
+            if (vm.agregar(datos.nombre, uri.toString(), datos.tipo, datos.tamano)) {
+                Documentos.conservarPermiso(context, uri)
+            }
+        }
     }
 
     Scaffold(topBar = { AppTopBar("Documentos", onBack = onBack) }) { padding ->

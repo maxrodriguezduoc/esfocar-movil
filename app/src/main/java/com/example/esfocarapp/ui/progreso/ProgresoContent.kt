@@ -21,8 +21,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,11 +34,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.esfocarapp.data.local.Intento
 import com.example.esfocarapp.util.Notificaciones
+import com.example.esfocarapp.viewmodel.ProgresoViewModel
 
 @Composable
-fun ProgresoContent(intentos: List<Intento>) {
+fun ProgresoContent(intentos: List<Intento>, vm: ProgresoViewModel) {
     val context = LocalContext.current
     var aviso by remember { mutableStateOf<String?>(null) }
+
+    // Al mostrar la pestaña se pide el resumen que calcula el microservicio
+    LaunchedEffect(Unit) { vm.cargarResumen() }
 
     // Pide el permiso de notificaciones y, si el usuario acepta, envía el recordatorio
     val pedirPermiso = rememberLauncherForActivityResult(
@@ -78,6 +84,27 @@ fun ProgresoContent(intentos: List<Intento>) {
                     AnimatedVisibility(visible = aviso != null) {
                         Text(aviso ?: "", style = MaterialTheme.typography.labelLarge)
                     }
+                }
+            }
+        }
+
+        // Resumen calculado por el microservicio ms-resultados
+        item {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp)) {
+                    Text("Resumen en el servidor", style = MaterialTheme.typography.titleMedium)
+                    val resumen = vm.resumen
+                    when {
+                        vm.cargandoNube -> Text("Consultando...")
+                        resumen != null -> {
+                            Text("Intentos registrados: ${resumen.intentos}")
+                            Text("Promedio: ${"%.0f".format(resumen.promedioPorcentaje)}%")
+                            Text("Mejor resultado: ${resumen.mejorPorcentaje}%")
+                        }
+                        vm.errorNube != null -> Text(vm.errorNube ?: "", color = MaterialTheme.colorScheme.error)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(onClick = vm::cargarResumen) { Text("Actualizar") }
                 }
             }
         }

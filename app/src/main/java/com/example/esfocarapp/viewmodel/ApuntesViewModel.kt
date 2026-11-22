@@ -1,26 +1,25 @@
 package com.example.esfocarapp.viewmodel
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.esfocarapp.data.AppRepository
-import com.example.esfocarapp.data.local.AppDatabase
-import com.example.esfocarapp.data.local.Apunte
+import com.example.esfocarapp.data.ApuntesRepository
+import com.example.esfocarapp.data.remote.ApunteRemoto
+import com.example.esfocarapp.data.remote.Respuesta
+import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Validador
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-// ViewModel del segundo formulario: apuntes personales del estudiante
-class ApuntesViewModel(app: Application) : AndroidViewModel(app) {
+// ViewModel de apuntes personales. Los datos viven en el microservicio ms-apuntes (CRUD completo).
+class ApuntesViewModel(
+    private val repo: ApuntesRepository,
+    private val aliasActual: () -> String? = { Sesion.alias }
+) : ViewModel() {
 
-    private val repo = AppRepository(AppDatabase.obtener(app))
-
-    // Lista de apuntes guardados (se actualiza sola)
-    val apuntes: Flow<List<Apunte>> = repo.apuntes
-
+    var apuntes by mutableStateOf<List<ApunteRemoto>>(emptyList())
+        private set
     var titulo by mutableStateOf("")
         private set
     var contenido by mutableStateOf("")
@@ -30,6 +29,12 @@ class ApuntesViewModel(app: Application) : AndroidViewModel(app) {
     var errorContenido by mutableStateOf<String?>(null)
         private set
     var mensaje by mutableStateOf<String?>(null)
+        private set
+    var cargando by mutableStateOf(false)
+        private set
+
+    // Si no es null, el formulario está editando el apunte con ese id (UPDATE)
+    var editandoId by mutableStateOf<Long?>(null)
         private set
 
     fun cambiarTitulo(valor: String) {
@@ -44,24 +49,87 @@ class ApuntesViewModel(app: Application) : AndroidViewModel(app) {
         mensaje = null
     }
 
+    // READ: trae los apuntes del usuario desde el microservicio
+    fun cargar() {
+        viewModelScope.launch { recargar() }
+    }
+
+    private suspend fun recargar() {
+        val alias = aliasActual() ?: return
+        cargando = true
+        when (val respuesta = repo.listar(alias)) {
+            is Respuesta.Exito -> apuntes = respuesta.datos
+            is Respuesta.Fallo -> mensaje = respuesta.mensaje
+        }
+        cargando = false
+    }
+
+    // CREATE o UPDATE según si se está editando
     fun guardar() {
         errorTitulo = Validador.tituloApunte(titulo)
         errorContenido = Validador.contenidoApunte(contenido)
         if (errorTitulo != null || errorContenido != null) return
 
+        val alias = aliasActual()
+        if (alias == null) {
+            mensaje = "Inicia sesión para guardar apuntes"
+            return
+        }
+
         viewModelScope.launch {
-            repo.guardarApunte(titulo.trim(), contenido.trim())
-            titulo = ""
-            contenido = ""
-            errorTitulo = null
-            errorContenido = null
-            mensaje = "Apunte guardado"
+            cargando = true
+            val id = editandoId
+            val respuesta = if (id == null) {
+                repo.crear(alias, titulo.trim(), contenido.trim())
+            } else {
+                repo.actualizar(id, alias, titulo.trim(), contenido.trim())
+            }
+            when (respuesta) {
+                is Respuesta.Exito -> {
+                    mensaje = if (id == null) "Apunte guardado" else "Apunte actualizado"
+                    limpiarFormulario()
+                    recargar()
+                }
+                is Respuesta.Fallo -> mensaje = respuesta.mensaje
+            }
+            cargando = false
         }
     }
 
-    fun borrar(apunte: Apunte) {
+    // Carga un apunte en el formulario para editarlo
+    fun editar(apunte: ApunteRemoto) {
+        editandoId = apunte.id
+        titulo = apunte.titulo
+        contenido = apunte.contenido
+        errorTitulo = null
+        errorContenido = null
+        mensaje = null
+    }
+
+    fun cancelarEdicion() {
+        limpiarFormulario()
+        mensaje = null
+    }
+
+    // DELETE
+    fun borrar(apunte: ApunteRemoto) {
         viewModelScope.launch {
-            repo.borrarApunte(apunte)
+            when (val respuesta = repo.eliminar(apunte.id)) {
+                is Respuesta.Exito -> {
+                    if (editandoId == apunte.id) limpiarFormulario()
+                    mensaje = "Apunte eliminado"
+                    recargar()
+                }
+                is Respuesta.Fallo -> mensaje = respuesta.mensaje
+            }
         }
+    }
+
+    private fun limpiarFormulario() {
+        titulo = ""
+        contenido = ""
+        errorTitulo = null
+        errorContenido = null
+        editandoId = null
     }
 }

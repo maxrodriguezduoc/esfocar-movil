@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.esfocarapp.data.FakeData
 import com.example.esfocarapp.ui.apuntes.ApuntesScreen
+import com.example.esfocarapp.ui.conceptos.ConceptosScreen
 import com.example.esfocarapp.ui.documentos.DocumentosScreen
 import com.example.esfocarapp.ui.login.LoginScreen
 import com.example.esfocarapp.ui.principal.PrincipalScreen
@@ -50,6 +51,7 @@ fun AppNavigation() {
                 onAsignatura = { id -> navController.navigate("trivia/$id") },
                 onApuntes = { navController.navigate("apuntes") },
                 onDocumentos = { navController.navigate("documentos") },
+                onConceptos = { navController.navigate("conceptos") },
                 onCerrarSesion = { navController.navigate("cerrar_sesion") }
             )
         }
@@ -62,6 +64,10 @@ fun AppNavigation() {
 
         composable("apuntes") {
             ApuntesScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable("conceptos") {
+            ConceptosScreen(onBack = { navController.popBackStack() })
         }
 
         composable("documentos") {

@@ -45,6 +45,13 @@ object Validador {
         return null
     }
 
+    fun termino(valor: String): String? {
+        if (valor.isBlank()) return "Escribe un concepto a buscar"
+        if (valor.trim().length < 2) return "Debe tener al menos 2 caracteres"
+        if (valor.length > 60) return "Máximo 60 caracteres"
+        return null
+    }
+
     fun documento(tipo: String, tamano: Long): String? {
         if (tipo !in tiposDocumento) return "Solo se permiten archivos PDF o Word"
         if (tamano > 10L * 1024 * 1024) return "El archivo no puede superar los 10 MB"

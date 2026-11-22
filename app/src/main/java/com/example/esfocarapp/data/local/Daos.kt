@@ -18,19 +18,6 @@ interface UsuarioDao {
 }
 
 @Dao
-interface ApunteDao {
-    @Insert
-    suspend fun insertar(apunte: Apunte)
-
-    @Delete
-    suspend fun eliminar(apunte: Apunte)
-
-    // Flow = lista que se actualiza sola cuando cambia la base de datos
-    @Query("SELECT * FROM apuntes ORDER BY id DESC")
-    fun todos(): Flow<List<Apunte>>
-}
-
-@Dao
 interface IntentoDao {
     @Insert
     suspend fun insertar(intento: Intento)

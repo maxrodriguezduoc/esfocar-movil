@@ -13,14 +13,6 @@ data class Usuario(
     val claveHash: String   // la contraseña nunca se guarda en texto plano
 )
 
-@Entity(tableName = "apuntes")
-data class Apunte(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val titulo: String,
-    val contenido: String,
-    val fecha: String
-)
-
 @Entity(tableName = "intentos")
 data class Intento(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

@@ -1,22 +1,18 @@
 package com.example.esfocarapp.viewmodel
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.AppRepository
-import com.example.esfocarapp.data.local.AppDatabase
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Validador
 import kotlinx.coroutines.launch
 
 // ViewModel de los formularios de ingreso y registro.
 // Guarda el ESTADO (textos, errores) y la LÓGICA. La pantalla solo lo muestra.
-class AuthViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val repo = AppRepository(AppDatabase.obtener(app))
+class AuthViewModel(private val repo: AppRepository) : ViewModel() {
 
     // Valores de los campos
     var alias by mutableStateOf("")

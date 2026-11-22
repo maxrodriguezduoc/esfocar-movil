@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.esfocarapp.ui.components.CampoTexto
 import com.example.esfocarapp.ui.components.LogoEsfocar
 import com.example.esfocarapp.viewmodel.AuthViewModel
+import com.example.esfocarapp.viewmodel.Fabrica
 
 // Se usa para DOS vistas:
 //  registro = false -> vista "Iniciar sesión"
@@ -35,7 +36,7 @@ fun LoginScreen(
     registro: Boolean,
     onIngreso: () -> Unit,
     onCambiarVista: () -> Unit,
-    vm: AuthViewModel = viewModel()
+    vm: AuthViewModel = viewModel(factory = Fabrica.Proveedor)
 ) {
     Scaffold { padding ->
         Column(

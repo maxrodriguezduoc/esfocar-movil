@@ -1,24 +1,26 @@
 package com.example.esfocarapp.viewmodel
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.AppRepository
 import com.example.esfocarapp.data.FakeData
-import com.example.esfocarapp.data.local.AppDatabase
+import com.example.esfocarapp.data.ResultadosRepository
+import com.example.esfocarapp.data.remote.Respuesta
 import com.example.esfocarapp.model.Pregunta
+import com.example.esfocarapp.util.Sesion
 import kotlinx.coroutines.launch
 
 // ViewModel de la trivia: controla en qué pregunta vamos, qué se eligió y el puntaje
-class TriviaViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val repo = AppRepository(AppDatabase.obtener(app))
-
-    val preguntas: List<Pregunta> = FakeData.preguntas
+class TriviaViewModel(
+    private val repo: AppRepository,
+    private val resultados: ResultadosRepository,
+    val preguntas: List<Pregunta> = FakeData.preguntas,
+    private val aliasActual: () -> String? = { Sesion.alias }
+) : ViewModel() {
 
     var indice by mutableIntStateOf(0)
         private set
@@ -27,6 +29,10 @@ class TriviaViewModel(app: Application) : AndroidViewModel(app) {
     var respondida by mutableStateOf(false)
         private set
     var aciertos by mutableIntStateOf(0)
+        private set
+
+    // Estado de la sincronización con el microservicio al terminar
+    var avisoNube by mutableStateOf<String?>(null)
         private set
 
     val terminada: Boolean
@@ -52,11 +58,20 @@ class TriviaViewModel(app: Application) : AndroidViewModel(app) {
         indice++
         seleccion = null
         respondida = false
-        // Al terminar, guardamos el resultado en la base de datos local
+        // Al terminar: se guarda en el teléfono (Room) y se envía al microservicio (red)
         if (terminada) {
             viewModelScope.launch {
                 repo.guardarIntento(actividad, aciertos, preguntas.size)
+                enviarANube(actividad)
             }
+        }
+    }
+
+    private suspend fun enviarANube(actividad: String) {
+        val alias = aliasActual() ?: return
+        avisoNube = when (resultados.guardar(alias, actividad, aciertos, preguntas.size)) {
+            is Respuesta.Exito -> "Resultado sincronizado con el servidor"
+            is Respuesta.Fallo -> "Resultado guardado solo en el teléfono (sin conexión)"
         }
     }
 
@@ -65,5 +80,6 @@ class TriviaViewModel(app: Application) : AndroidViewModel(app) {
         seleccion = null
         respondida = false
         aciertos = 0
+        avisoNube = null
     }
 }

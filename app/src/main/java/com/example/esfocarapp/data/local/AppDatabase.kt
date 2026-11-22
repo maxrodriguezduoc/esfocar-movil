@@ -5,16 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// version = 2 porque agregamos la tabla "documentos"
+// version = 3: los apuntes ahora viven en el microservicio, ya no en la base local
 @Database(
-    entities = [Usuario::class, Apunte::class, Intento::class, Documento::class],
-    version = 2,
+    entities = [Usuario::class, Intento::class, Documento::class],
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun usuarioDao(): UsuarioDao
-    abstract fun apunteDao(): ApunteDao
     abstract fun intentoDao(): IntentoDao
     abstract fun documentoDao(): DocumentoDao
 
