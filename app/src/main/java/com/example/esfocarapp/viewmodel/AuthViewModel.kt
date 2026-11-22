@@ -6,13 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.AppRepository
+import com.example.esfocarapp.util.Preferencias
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Validador
 import kotlinx.coroutines.launch
 
 // ViewModel de los formularios de ingreso y registro.
 // Guarda el ESTADO (textos, errores) y la LÓGICA. La pantalla solo lo muestra.
-class AuthViewModel(private val repo: AppRepository) : ViewModel() {
+class AuthViewModel(
+    private val repo: AppRepository,
+    private val prefs: Preferencias? = null
+) : ViewModel() {
 
     // Valores de los campos
     var alias by mutableStateOf("")
@@ -72,14 +76,14 @@ class AuthViewModel(private val repo: AppRepository) : ViewModel() {
             cargando = true
             if (registro) {
                 if (repo.registrarUsuario(alias, clave)) {
-                    Sesion.alias = alias
+                    iniciar()
                     onExito()
                 } else {
                     mensaje = "Ese usuario ya existe"
                 }
             } else {
                 if (repo.iniciarSesion(alias, clave)) {
-                    Sesion.alias = alias
+                    iniciar()
                     onExito()
                 } else {
                     mensaje = "Usuario o contraseña incorrectos"
@@ -87,5 +91,11 @@ class AuthViewModel(private val repo: AppRepository) : ViewModel() {
             }
             cargando = false
         }
+    }
+
+    // La sesión queda guardada: al volver a abrir la app no se pide ingresar de nuevo
+    private fun iniciar() {
+        Sesion.alias = alias
+        prefs?.aliasSesion = alias
     }
 }
