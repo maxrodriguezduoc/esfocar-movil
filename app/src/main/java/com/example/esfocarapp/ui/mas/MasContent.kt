@@ -25,6 +25,7 @@ import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
@@ -80,7 +81,30 @@ fun MasContent(vm: AjustesViewModel, nav: Navegacion) {
                     Spacer(Modifier.width(14.dp))
                     Column {
                         Text(alias, style = MaterialTheme.typography.titleLarge)
-                        Text("Estudiante en formación", style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            if (Sesion.esDocente) "Docente" else "Estudiante en formación",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
+        // ---------- Modo docente ----------
+        if (Sesion.esDocente) {
+            item {
+                Tarjeta(onClick = nav::panelDocente, color = MaterialTheme.colorScheme.secondaryContainer) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        InsigniaIcono(Icons.Rounded.School, MaterialTheme.colorScheme.onSecondaryContainer, 44.dp)
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("Panel docente", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "Publica, edita y elimina preguntas y casos simulados para tus estudiantes",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Icon(Icons.AutoMirrored.Rounded.ArrowForward, contentDescription = null)
                     }
                 }
             }

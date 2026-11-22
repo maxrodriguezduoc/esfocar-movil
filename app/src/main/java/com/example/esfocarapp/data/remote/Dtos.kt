@@ -49,6 +49,22 @@ data class CasoDto(
     val opciones: List<OpcionDto>
 )
 
+// Lo que envía un docente para crear o editar contenido
+data class PreguntaSolicitud(
+    val enunciado: String,
+    val explicacion: String,
+    val alternativas: List<AlternativaDto>
+)
+
+data class CasoSolicitud(
+    val titulo: String,
+    val situacion: String,
+    val pregunta: String,
+    val dificultad: String,
+    val fundamento: String,
+    val opciones: List<OpcionDto>
+)
+
 // ---------- Microservicio de apuntes (ms-apuntes) ----------
 data class ApunteRemoto(
     val id: Long,

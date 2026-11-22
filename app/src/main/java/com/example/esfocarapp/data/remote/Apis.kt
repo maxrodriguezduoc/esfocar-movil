@@ -17,6 +17,25 @@ interface ContenidosApi {
 
     @GET("api/contenidos/paquete")
     suspend fun paquete(): PaqueteDto
+
+    // ----- Gestión docente: publicar, editar y eliminar preguntas y casos -----
+    @POST("api/unidades/{unidadId}/preguntas")
+    suspend fun crearPregunta(@Path("unidadId") unidadId: Long, @Body datos: PreguntaSolicitud): PreguntaDto
+
+    @PUT("api/preguntas/{id}")
+    suspend fun actualizarPregunta(@Path("id") id: Long, @Body datos: PreguntaSolicitud): PreguntaDto
+
+    @DELETE("api/preguntas/{id}")
+    suspend fun eliminarPregunta(@Path("id") id: Long)
+
+    @POST("api/unidades/{unidadId}/casos")
+    suspend fun crearCaso(@Path("unidadId") unidadId: Long, @Body datos: CasoSolicitud): CasoDto
+
+    @PUT("api/casos/{id}")
+    suspend fun actualizarCaso(@Path("id") id: Long, @Body datos: CasoSolicitud): CasoDto
+
+    @DELETE("api/casos/{id}")
+    suspend fun eliminarCaso(@Path("id") id: Long)
 }
 
 // Microservicio propio (Spring Boot) - puerto 8081

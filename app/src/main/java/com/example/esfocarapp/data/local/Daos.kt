@@ -49,6 +49,12 @@ abstract class ContenidoDao {
     @Query("SELECT * FROM preguntas WHERE unidadId = :unidadId ORDER BY id")
     abstract suspend fun preguntasDeUnidad(unidadId: Long): List<PreguntaEntity>
 
+    @Query("SELECT * FROM preguntas WHERE unidadId = :unidadId ORDER BY id")
+    abstract fun preguntasDeUnidadFlujo(unidadId: Long): Flow<List<PreguntaEntity>>
+
+    @Query("SELECT * FROM preguntas WHERE id = :id")
+    abstract suspend fun pregunta(id: Long): PreguntaEntity?
+
     @Query("SELECT p.* FROM preguntas p JOIN unidades u ON p.unidadId = u.id WHERE u.asignaturaId = :asignaturaId")
     abstract suspend fun preguntasDeAsignatura(asignaturaId: Long): List<PreguntaEntity>
 

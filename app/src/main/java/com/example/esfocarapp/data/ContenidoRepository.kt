@@ -42,6 +42,11 @@ class ContenidoRepository(
 
     suspend fun caso(id: Long): Caso? = dao.caso(id)?.let(MapeoContenido::caso)
 
+    suspend fun pregunta(id: Long): Pregunta? = dao.pregunta(id)?.let(MapeoContenido::pregunta)
+
+    fun preguntasFlujo(unidadId: Long): Flow<List<Pregunta>> =
+        dao.preguntasDeUnidadFlujo(unidadId).map { it.map(MapeoContenido::pregunta) }
+
     suspend fun preguntasDeUnidad(unidadId: Long): List<Pregunta> =
         dao.preguntasDeUnidad(unidadId).map(MapeoContenido::pregunta)
 
@@ -61,13 +66,14 @@ class ContenidoRepository(
         prefs.versionContenido = paquete.version
     }
 
-    // Devuelve Exito(true) si se descargó contenido nuevo, Exito(false) si ya estaba al día
+    // Devuelve Exito(true) si se descargó contenido distinto, Exito(false) si ya estaba al día
     suspend fun sincronizar(): Respuesta<Boolean> {
         val version = when (val r = llamarApi { api.version() }) {
             is Respuesta.Fallo -> return r
             is Respuesta.Exito -> r.datos.version
         }
-        if (version <= prefs.versionContenido) return Respuesta.Exito(false)
+        // Distinta (no solo mayor): también cubre un servidor reiniciado con su base de datos nueva
+        if (version == prefs.versionContenido) return Respuesta.Exito(false)
 
         return when (val r = llamarApi { api.paquete() }) {
             is Respuesta.Fallo -> r

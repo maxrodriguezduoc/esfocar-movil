@@ -9,6 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.esfocarapp.ui.apuntes.ApuntesScreen
 import com.example.esfocarapp.ui.conceptos.ConceptosScreen
+import com.example.esfocarapp.ui.docente.FormCasoScreen
+import com.example.esfocarapp.ui.docente.FormPreguntaScreen
+import com.example.esfocarapp.ui.docente.PanelDocenteScreen
 import com.example.esfocarapp.ui.documentos.DocumentosScreen
 import com.example.esfocarapp.ui.estudio.AsignaturaScreen
 import com.example.esfocarapp.ui.estudio.FavoritosScreen
@@ -42,6 +45,9 @@ class Navegacion(private val nav: NavHostController) {
     fun documentos() = nav.navigate("documentos")
     fun conceptos() = nav.navigate("conceptos")
     fun cerrarSesion() = nav.navigate("cerrar_sesion")
+    fun panelDocente() = nav.navigate("docente")
+    fun formPregunta(unidadId: Long, id: Long) = nav.navigate("docente/pregunta/$unidadId/$id")
+    fun formCaso(unidadId: Long, id: Long) = nav.navigate("docente/caso/$unidadId/$id")
 }
 
 // Mapa de pantallas de la app. Cada "composable(...)" es una pantalla con su ruta.
@@ -95,6 +101,11 @@ fun AppNavigation(ajustes: AjustesViewModel = viewModel(factory = Fabrica.Provee
         composable("simulacro") { SimulacroScreen(nav) }
         composable("casos") { CasosScreen(nav) }
         composable("caso/{id}") { CasoScreen(nav) }
+
+        // Modo docente
+        composable("docente") { PanelDocenteScreen(nav) }
+        composable("docente/pregunta/{unidadId}/{id}") { FormPreguntaScreen(nav) }
+        composable("docente/caso/{unidadId}/{id}") { FormCasoScreen(nav) }
 
         composable("apuntes") { ApuntesScreen(onBack = nav::volver) }
         composable("documentos") { DocumentosScreen(onBack = nav::volver) }
