@@ -56,6 +56,7 @@ object Datos {
 class PreferenciasFalsas(
     override var onboardingVisto: Boolean = false,
     override var aliasSesion: String? = null,
+    override var rolSesion: String = "ESTUDIANTE",
     override var versionContenido: Int = 0,
     override var tema: Tema = Tema.SISTEMA
 ) : Preferencias

@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+
 package com.example.esfocarapp.viewmodel
 
 import com.example.esfocarapp.Datos
@@ -14,6 +16,7 @@ import com.example.esfocarapp.data.remote.ResumenRemoto
 import com.example.esfocarapp.model.NivelActuacion
 import com.example.esfocarapp.model.TipoActividad
 import com.example.esfocarapp.ui.theme.PreferenciaTema
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Tema
 import io.mockk.coEvery
@@ -266,11 +269,14 @@ class AjustesViewModelTest {
 
     @Test
     fun cerrar_sesion_borra_la_sesion_guardada() {
-        val prefs = PreferenciasFalsas(aliasSesion = "cadete_01")
+        val prefs = PreferenciasFalsas(aliasSesion = "cadete_01", rolSesion = Rol.DOCENTE)
         Sesion.alias = "cadete_01"
+        Sesion.rol = Rol.DOCENTE
         AjustesViewModel(prefs, sincronizador).cerrarSesion()
         assertNull(Sesion.alias)
         assertNull(prefs.aliasSesion)
+        assertFalse(Sesion.esDocente)
+        assertEquals(Rol.ESTUDIANTE, prefs.rolSesion)
     }
 
     @Test

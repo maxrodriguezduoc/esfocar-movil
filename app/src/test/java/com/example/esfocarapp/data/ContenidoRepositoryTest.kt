@@ -115,6 +115,16 @@ class ContenidoRepositoryTest {
     }
 
     @Test
+    fun si_el_servidor_se_reinicio_con_version_menor_tambien_descarga() = runBlocking {
+        prefs.versionContenido = 5
+        coEvery { api.version() } returns VersionDto(1)
+        coEvery { api.paquete() } returns paquete
+
+        assertEquals(Respuesta.Exito(true), repo.sincronizar())
+        assertEquals(1, prefs.versionContenido)
+    }
+
+    @Test
     fun sin_conexion_se_mantiene_el_contenido_local() = runBlocking {
         coEvery { api.version() } throws IOException()
         assertEquals(Respuesta.Fallo("Sin conexión con el servidor"), repo.sincronizar())

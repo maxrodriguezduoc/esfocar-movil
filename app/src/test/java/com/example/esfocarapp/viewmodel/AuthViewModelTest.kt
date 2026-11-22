@@ -3,6 +3,8 @@ package com.example.esfocarapp.viewmodel
 import com.example.esfocarapp.MainDispatcherRule
 import com.example.esfocarapp.PreferenciasFalsas
 import com.example.esfocarapp.data.AppRepository
+import com.example.esfocarapp.data.local.Usuario
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Sesion
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -30,12 +32,13 @@ class AuthViewModelTest {
     fun preparar() {
         Sesion.alias = null
         prefs = PreferenciasFalsas()
-        vm = AuthViewModel(repo, prefs)
+        vm = AuthViewModel(repo, prefs, "DOCENTE-ESFOCAR")
     }
 
     @After
     fun limpiar() {
         Sesion.alias = null
+        Sesion.rol = Rol.ESTUDIANTE
     }
 
     @Test
@@ -68,12 +71,12 @@ class AuthViewModelTest {
 
         assertEquals("Revisa los campos marcados", vm.mensaje)
         assertFalse(exito)
-        coVerify(exactly = 0) { repo.registrarUsuario(any(), any()) }
+        coVerify(exactly = 0) { repo.registrarUsuario(any(), any(), any()) }
     }
 
     @Test
     fun registro_exitoso_guarda_la_sesion() {
-        coEvery { repo.registrarUsuario("cadete_01", "abc12345") } returns true
+        coEvery { repo.registrarUsuario("cadete_01", "abc12345", Rol.ESTUDIANTE) } returns true
         vm.cambiarAlias("cadete_01")
         vm.cambiarClave("abc12345")
         vm.cambiarConfirmacion("abc12345")
@@ -89,7 +92,7 @@ class AuthViewModelTest {
 
     @Test
     fun registro_de_usuario_existente_muestra_mensaje() {
-        coEvery { repo.registrarUsuario(any(), any()) } returns false
+        coEvery { repo.registrarUsuario(any(), any(), any()) } returns false
         vm.cambiarAlias("cadete_01")
         vm.cambiarClave("abc12345")
         vm.cambiarConfirmacion("abc12345")
@@ -104,7 +107,7 @@ class AuthViewModelTest {
 
     @Test
     fun login_correcto_guarda_la_sesion() {
-        coEvery { repo.iniciarSesion("cadete_01", "abc12345") } returns true
+        coEvery { repo.autenticar("cadete_01", "abc12345") } returns Usuario(1, "cadete_01", "hash", Rol.DOCENTE)
         vm.cambiarAlias("cadete_01")
         vm.cambiarClave("abc12345")
 
@@ -113,11 +116,13 @@ class AuthViewModelTest {
 
         assertTrue(exito)
         assertEquals("cadete_01", Sesion.alias)
+        assertTrue(Sesion.esDocente)                     // el rol viene del usuario guardado
+        assertEquals(Rol.DOCENTE, prefs.rolSesion)
     }
 
     @Test
     fun login_incorrecto_muestra_mensaje() {
-        coEvery { repo.iniciarSesion(any(), any()) } returns false
+        coEvery { repo.autenticar(any(), any()) } returns null
         vm.cambiarAlias("cadete_01")
         vm.cambiarClave("abc12345")
 
@@ -126,5 +131,46 @@ class AuthViewModelTest {
 
         assertFalse(exito)
         assertEquals("Usuario o contraseña incorrectos", vm.mensaje)
+    }
+
+    @Test
+    fun registro_como_docente_exige_el_codigo() {
+        vm.cambiarAlias("profe_01")
+        vm.cambiarClave("abc12345")
+        vm.cambiarConfirmacion("abc12345")
+        vm.cambiarEsDocente(true)
+
+        vm.enviar(registro = true) {}
+        assertNotNull(vm.errorCodigo)
+        coVerify(exactly = 0) { repo.registrarUsuario(any(), any(), any()) }
+
+        vm.cambiarCodigo("OTRO")
+        assertEquals("Código de docente incorrecto", vm.errorCodigo)
+    }
+
+    @Test
+    fun registro_como_docente_con_codigo_valido() {
+        coEvery { repo.registrarUsuario("profe_01", "abc12345", Rol.DOCENTE) } returns true
+        vm.cambiarAlias("profe_01")
+        vm.cambiarClave("abc12345")
+        vm.cambiarConfirmacion("abc12345")
+        vm.cambiarEsDocente(true)
+        vm.cambiarCodigo("DOCENTE-ESFOCAR")
+
+        var exito = false
+        vm.enviar(registro = true) { exito = true }
+
+        assertTrue(exito)
+        assertTrue(Sesion.esDocente)
+        assertEquals(Rol.DOCENTE, prefs.rolSesion)
+    }
+
+    @Test
+    fun desactivar_docente_limpia_el_codigo() {
+        vm.cambiarEsDocente(true)
+        vm.cambiarCodigo("x")
+        vm.cambiarEsDocente(false)
+        assertEquals("", vm.codigo)
+        assertNull(vm.errorCodigo)
     }
 }

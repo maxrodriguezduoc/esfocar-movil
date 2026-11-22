@@ -4,6 +4,7 @@ import com.example.esfocarapp.data.local.Documento
 import com.example.esfocarapp.data.local.DocumentoDao
 import com.example.esfocarapp.data.local.Usuario
 import com.example.esfocarapp.data.local.UsuarioDao
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Seguridad
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -29,6 +31,21 @@ class AppRepositoryTest {
         assertTrue(repo.registrarUsuario("cadete_01", "abc12345"))
 
         coVerify { usuarioDao.insertar(Usuario(alias = "cadete_01", claveHash = Seguridad.hash("abc12345"))) }
+    }
+
+    @Test
+    fun registrar_docente_guarda_su_rol() = runBlocking {
+        coEvery { usuarioDao.buscarPorAlias("profe_01") } returns null
+        assertTrue(repo.registrarUsuario("profe_01", "abc12345", Rol.DOCENTE))
+        coVerify { usuarioDao.insertar(match { it.alias == "profe_01" && it.rol == Rol.DOCENTE }) }
+    }
+
+    @Test
+    fun autenticar_devuelve_el_usuario_con_su_rol() = runBlocking {
+        coEvery { usuarioDao.buscarPorAlias("profe_01") } returns
+            Usuario(1, "profe_01", Seguridad.hash("abc12345"), Rol.DOCENTE)
+        assertEquals(Rol.DOCENTE, repo.autenticar("profe_01", "abc12345")?.rol)
+        assertNull(repo.autenticar("profe_01", "malaclave1"))
     }
 
     @Test

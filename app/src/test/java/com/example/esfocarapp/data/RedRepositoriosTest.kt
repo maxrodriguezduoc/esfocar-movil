@@ -9,6 +9,8 @@ import com.example.esfocarapp.data.remote.ResultadosApi
 import com.example.esfocarapp.data.remote.RetrofitFactory
 import com.example.esfocarapp.data.remote.WikipediaApi
 import com.example.esfocarapp.data.remote.ContenidosApi
+import com.example.esfocarapp.data.remote.AlternativaDto
+import com.example.esfocarapp.data.remote.PreguntaSolicitud
 import com.example.esfocarapp.data.remote.llamarApi
 import com.example.esfocarapp.Datos
 import com.google.gson.JsonParseException
@@ -223,6 +225,29 @@ class RetrofitContratoTest {
         val repo = ResultadosRepository(RetrofitFactory.crear(direccion, ResultadosApi::class.java))
 
         assertEquals(Respuesta.Fallo("Sin conexión con el servidor"), repo.listar("a"))
+    }
+
+    @Test
+    fun docente_publica_pregunta_con_POST_y_borra_caso_con_DELETE() = runBlocking {
+        servidor.enqueue(
+            MockResponse().setResponseCode(201).setBody(
+                """{"id":4206,"enunciado":"¿Nueva?","explicacion":"x","alternativas":[]}"""
+            )
+        )
+        servidor.enqueue(MockResponse().setResponseCode(204))
+        val api = RetrofitFactory.crear(url(), ContenidosApi::class.java)
+
+        val creada = api.crearPregunta(
+            11, PreguntaSolicitud("¿Nueva?", "x", listOf(AlternativaDto("A", true, "Bien")))
+        )
+        api.eliminarCaso(1151)
+
+        assertEquals(4206L, creada.id)
+        val post = servidor.takeRequest()
+        assertEquals("POST /api/unidades/11/preguntas", "${post.method} ${post.path}")
+        assertTrue(post.body.readUtf8().contains("\"correcta\":true"))
+        val delete = servidor.takeRequest()
+        assertEquals("DELETE /api/casos/1151", "${delete.method} ${delete.path}")
     }
 
     @Test
