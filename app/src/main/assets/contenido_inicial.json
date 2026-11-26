@@ -1,0 +1,953 @@
+{
+  "version": 1,
+  "asignaturas": [
+    {
+      "id": 1,
+      "nombre": "Procedimientos Policiales Básicos",
+      "descripcion": "Principios de actuación, atención de requerimientos y resguardo del sitio de un suceso. Contenido ficticio de ejemplo.",
+      "icono": "procedimientos",
+      "color": "#1E5631",
+      "unidades": [
+        {
+          "id": 11,
+          "numero": 1,
+          "titulo": "Principios de actuación",
+          "resumen": "Bases que orientan toda intervención: seguridad, legalidad, oportunidad y registro.",
+          "fichas": [
+            {
+              "id": 111,
+              "titulo": "Secuencia general de intervención",
+              "contenido": "Toda intervención sigue una secuencia ordenada que reduce riesgos y errores. El Protocolo Ficticio PF-01 la resume en cinco pasos: evaluar, asegurar, informar, actuar y registrar.\n\nEvaluar significa observar el entorno antes de acercarse: personas involucradas, posibles peligros y recursos disponibles. Asegurar implica proteger primero la propia integridad, la del compañero y la de terceros.\n\nInformar a la central permite coordinar apoyo y deja constancia del inicio del procedimiento. Solo después se actúa conforme al protocolo aplicable y, al terminar, se registra todo lo realizado de forma objetiva.",
+              "puntosClave": [
+                "Secuencia PF-01: evaluar, asegurar, informar, actuar y registrar.",
+                "La seguridad propia y de terceros va antes de cualquier acción.",
+                "Informar a la central coordina apoyo y deja constancia.",
+                "El registro debe ser objetivo, completo y oportuno."
+              ]
+            },
+            {
+              "id": 112,
+              "titulo": "Legalidad, oportunidad y proporcionalidad",
+              "contenido": "La actuación debe ajustarse a las atribuciones vigentes: hacer lo que la norma permite y en la forma que la norma establece. A esto se le llama principio de legalidad.\n\nLa oportunidad exige intervenir en el momento adecuado: ni antes de contar con información mínima, ni tan tarde que el daño ya no pueda evitarse.\n\nLa proporcionalidad indica que la respuesta debe ser acorde a la situación. Ante una conducta menor no corresponde una reacción desmedida; siempre se prefiere la alternativa menos lesiva que permita cumplir el objetivo.",
+              "puntosClave": [
+                "Legalidad: actuar solo dentro de las atribuciones vigentes.",
+                "Oportunidad: intervenir en el momento adecuado.",
+                "Proporcionalidad: respuesta acorde a la situación.",
+                "Preferir siempre la alternativa menos lesiva."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 1101,
+              "enunciado": "Según la secuencia PF-01, ¿cuál es el primer paso de toda intervención?",
+              "explicacion": "La secuencia comienza evaluando el entorno; actuar sin evaluar aumenta el riesgo.",
+              "alternativas": [
+                { "texto": "Evaluar el entorno", "correcta": true, "retroalimentacion": "Correcto: primero se observa y se identifican riesgos." },
+                { "texto": "Actuar de inmediato", "correcta": false, "retroalimentacion": "Incorrecto: actuar sin evaluar expone a riesgos innecesarios." },
+                { "texto": "Registrar lo ocurrido", "correcta": false, "retroalimentacion": "Incorrecto: el registro es el último paso." },
+                { "texto": "Solicitar documentos a los presentes", "correcta": false, "retroalimentacion": "Incorrecto: antes se debe evaluar y asegurar." }
+              ]
+            },
+            {
+              "id": 1102,
+              "enunciado": "¿Qué se protege primero al asegurar una situación?",
+              "explicacion": "Sin seguridad propia y del equipo no es posible ayudar a otros.",
+              "alternativas": [
+                { "texto": "Los bienes materiales del lugar", "correcta": false, "retroalimentacion": "Incorrecto: las personas son la prioridad." },
+                { "texto": "La integridad propia, del compañero y de terceros", "correcta": true, "retroalimentacion": "Correcto: la seguridad de las personas es prioritaria." },
+                { "texto": "La documentación del procedimiento", "correcta": false, "retroalimentacion": "Incorrecto: la documentación es posterior." }
+              ]
+            },
+            {
+              "id": 1103,
+              "enunciado": "Elegir siempre la alternativa menos lesiva que permita cumplir el objetivo corresponde al principio de...",
+              "explicacion": "La proporcionalidad exige una respuesta acorde y lo menos lesiva posible.",
+              "alternativas": [
+                { "texto": "Oportunidad", "correcta": false, "retroalimentacion": "Incorrecto: la oportunidad se refiere al momento de actuar." },
+                { "texto": "Legalidad", "correcta": false, "retroalimentacion": "Incorrecto: la legalidad se refiere a actuar dentro de las atribuciones." },
+                { "texto": "Proporcionalidad", "correcta": true, "retroalimentacion": "Correcto: la respuesta debe ser acorde y menos lesiva." }
+              ]
+            },
+            {
+              "id": 1104,
+              "enunciado": "¿Para qué sirve informar a la central al inicio de un procedimiento?",
+              "explicacion": "Informar permite coordinar apoyo y deja constancia del inicio.",
+              "alternativas": [
+                { "texto": "Para coordinar apoyo y dejar constancia", "correcta": true, "retroalimentacion": "Correcto: coordina recursos y respalda la actuación." },
+                { "texto": "Solo para cumplir un trámite", "correcta": false, "retroalimentacion": "Incorrecto: tiene un fin operativo concreto." },
+                { "texto": "Para delegar la responsabilidad del procedimiento", "correcta": false, "retroalimentacion": "Incorrecto: la responsabilidad no se delega por informar." }
+              ]
+            },
+            {
+              "id": 1105,
+              "enunciado": "Un registro de procedimiento bien hecho debe ser...",
+              "explicacion": "El registro objetivo y oportuno permite revisar y respaldar lo actuado.",
+              "alternativas": [
+                { "texto": "Breve y basado en impresiones personales", "correcta": false, "retroalimentacion": "Incorrecto: las opiniones no reemplazan los hechos." },
+                { "texto": "Objetivo, completo y oportuno", "correcta": true, "retroalimentacion": "Correcto: describe hechos verificables a tiempo." },
+                { "texto": "Redactado días después para tener más perspectiva", "correcta": false, "retroalimentacion": "Incorrecto: el registro tardío pierde precisión." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 1151,
+              "titulo": "Discusión en la vía pública",
+              "situacion": "Durante un patrullaje preventivo observas a dos personas discutiendo a gritos junto a un paradero. Hay transeúntes alrededor y uno de los involucrados sostiene una botella de vidrio. Tu compañero está a unos metros, cerca del vehículo.",
+              "pregunta": "¿Cuál es la actuación más adecuada?",
+              "dificultad": "BASICA",
+              "fundamento": "La secuencia PF-01 indica evaluar y asegurar antes de actuar. La botella representa un riesgo, por lo que corresponde coordinarse con el compañero, informar y luego intervenir verbalmente manteniendo distancia de seguridad.",
+              "opciones": [
+                { "texto": "Evaluar el riesgo, avisar al compañero e informar a la central antes de acercarse con distancia de seguridad", "puntaje": 2, "retroalimentacion": "Actuación óptima: sigue la secuencia y protege a todos los presentes." },
+                { "texto": "Acercarse de inmediato a separar a los involucrados", "puntaje": 0, "retroalimentacion": "Actuar sin evaluar ni coordinarse expone a un riesgo innecesario por la botella." },
+                { "texto": "Llamar a la central y esperar sin intervenir hasta que llegue apoyo", "puntaje": 1, "retroalimentacion": "Informar es correcto, pero la espera pasiva puede permitir que la situación escale." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "numero": 2,
+          "titulo": "Atención de requerimientos ciudadanos",
+          "resumen": "Cómo recibir, clasificar y responder solicitudes de la comunidad de manera eficaz.",
+          "fichas": [
+            {
+              "id": 121,
+              "titulo": "Recepción del requerimiento",
+              "contenido": "Un requerimiento ciudadano es cualquier solicitud de ayuda, denuncia o consulta que una persona formula. La primera impresión es clave: saludar, identificarse y escuchar sin interrumpir genera confianza.\n\nDurante la escucha se deben obtener los datos esenciales: qué ocurrió, dónde, cuándo, quiénes participan y si existe un riesgo actual. Repetir brevemente lo entendido evita errores.\n\nSi la persona está alterada, se usa un tono calmado, frases cortas y se le explica qué se hará a continuación.",
+              "puntosClave": [
+                "Saludar, identificarse y escuchar activamente.",
+                "Obtener qué, dónde, cuándo, quiénes y si hay riesgo actual.",
+                "Confirmar lo entendido para evitar errores.",
+                "Ante personas alteradas: tono calmado y frases cortas."
+              ]
+            },
+            {
+              "id": 122,
+              "titulo": "Clasificación por prioridad",
+              "contenido": "El Procedimiento Ficticio PF-07 clasifica los requerimientos en tres niveles. Prioridad alta: existe riesgo para la vida o la integridad de una persona. Prioridad media: hay un daño en curso sin riesgo vital. Prioridad baja: consultas u orientaciones sin urgencia.\n\nLa prioridad define el orden de atención y los recursos que se solicitan. Un requerimiento puede cambiar de prioridad si aparecen nuevos antecedentes, por lo que la evaluación es continua.",
+              "puntosClave": [
+                "Alta: riesgo para la vida o integridad.",
+                "Media: daño en curso sin riesgo vital.",
+                "Baja: consultas u orientación.",
+                "La prioridad se reevalúa con nuevos antecedentes."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 1201,
+              "enunciado": "Según PF-07, una persona inconsciente en la vía pública corresponde a prioridad...",
+              "explicacion": "Hay riesgo para la vida, por lo tanto es prioridad alta.",
+              "alternativas": [
+                { "texto": "Alta", "correcta": true, "retroalimentacion": "Correcto: existe riesgo vital." },
+                { "texto": "Media", "correcta": false, "retroalimentacion": "Incorrecto: la media no considera riesgo vital." },
+                { "texto": "Baja", "correcta": false, "retroalimentacion": "Incorrecto: no es una simple consulta." }
+              ]
+            },
+            {
+              "id": 1202,
+              "enunciado": "¿Qué dato NO forma parte de los antecedentes esenciales de un requerimiento?",
+              "explicacion": "Los esenciales son qué, dónde, cuándo, quiénes y si hay riesgo actual.",
+              "alternativas": [
+                { "texto": "Dónde ocurrió", "correcta": false, "retroalimentacion": "Incorrecto: el lugar es esencial." },
+                { "texto": "Si existe un riesgo actual", "correcta": false, "retroalimentacion": "Incorrecto: el riesgo define la prioridad." },
+                { "texto": "La opinión del funcionario sobre la persona", "correcta": true, "retroalimentacion": "Correcto: las opiniones personales no son antecedentes." }
+              ]
+            },
+            {
+              "id": 1203,
+              "enunciado": "¿Por qué conviene repetir brevemente lo que la persona relató?",
+              "explicacion": "Confirmar lo entendido reduce errores de interpretación.",
+              "alternativas": [
+                { "texto": "Para ganar tiempo", "correcta": false, "retroalimentacion": "Incorrecto: el objetivo es la precisión." },
+                { "texto": "Para confirmar lo entendido y evitar errores", "correcta": true, "retroalimentacion": "Correcto: valida la información recibida." },
+                { "texto": "Para que la persona se tranquilice sola", "correcta": false, "retroalimentacion": "Incorrecto: ayuda, pero no es su propósito principal." }
+              ]
+            },
+            {
+              "id": 1204,
+              "enunciado": "Una consulta sobre cómo realizar un trámite corresponde a prioridad...",
+              "explicacion": "No hay daño ni riesgo: es una orientación de prioridad baja.",
+              "alternativas": [
+                { "texto": "Alta", "correcta": false, "retroalimentacion": "Incorrecto: no hay riesgo vital." },
+                { "texto": "Media", "correcta": false, "retroalimentacion": "Incorrecto: no hay un daño en curso." },
+                { "texto": "Baja", "correcta": true, "retroalimentacion": "Correcto: es una orientación sin urgencia." }
+              ]
+            },
+            {
+              "id": 1205,
+              "enunciado": "¿Puede cambiar la prioridad de un requerimiento ya clasificado?",
+              "explicacion": "La evaluación es continua; nuevos antecedentes pueden cambiar la prioridad.",
+              "alternativas": [
+                { "texto": "Sí, si aparecen nuevos antecedentes", "correcta": true, "retroalimentacion": "Correcto: la evaluación es continua." },
+                { "texto": "No, la primera clasificación es definitiva", "correcta": false, "retroalimentacion": "Incorrecto: la situación puede evolucionar." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 1251,
+              "titulo": "Dos llamados simultáneos",
+              "situacion": "Estás de turno en la guardia y recibes al mismo tiempo dos requerimientos: una vecina informa que su vehículo fue rayado durante la noche, y un transeúnte avisa que un adulto mayor se desplomó en la plaza y no responde.",
+              "pregunta": "¿Cómo priorizas la atención?",
+              "dificultad": "BASICA",
+              "fundamento": "Según PF-07, el riesgo para la vida es prioridad alta. El daño al vehículo es prioridad media/baja y puede atenderse después o derivarse.",
+              "opciones": [
+                { "texto": "Atender primero al adulto mayor y solicitar ambulancia; luego registrar la denuncia del vehículo", "puntaje": 2, "retroalimentacion": "Correcto: hay riesgo vital y se gestiona el apoyo médico de inmediato." },
+                { "texto": "Atender por orden de llegada", "puntaje": 0, "retroalimentacion": "El orden de llegada no considera el riesgo vital." },
+                { "texto": "Atender primero el vehículo porque se resuelve más rápido", "puntaje": 0, "retroalimentacion": "La rapidez no define la prioridad; la vida es lo primero." }
+              ]
+            },
+            {
+              "id": 1252,
+              "titulo": "Persona alterada en la guardia",
+              "situacion": "Una persona llega muy alterada a la guardia, hablando a gritos porque le robaron su mochila con documentos. No logras entender bien lo ocurrido.",
+              "pregunta": "¿Qué haces primero?",
+              "dificultad": "MEDIA",
+              "fundamento": "La ficha de recepción indica usar un tono calmado, frases cortas y explicar los pasos siguientes para obtener los antecedentes esenciales.",
+              "opciones": [
+                { "texto": "Pedirle con firmeza que se calme o no podrás atenderla", "puntaje": 0, "retroalimentacion": "Condicionar la atención aumenta la tensión." },
+                { "texto": "Usar un tono calmado, explicarle que la ayudarás y hacer preguntas cortas y concretas", "puntaje": 2, "retroalimentacion": "Correcto: genera confianza y permite obtener la información." },
+                { "texto": "Entregarle un formulario para que escriba lo ocurrido", "puntaje": 1, "retroalimentacion": "Puede servir después, pero primero hay que contener y escuchar." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "numero": 3,
+          "titulo": "Resguardo del sitio de un suceso",
+          "resumen": "Aislamiento, protección de evidencias y registro del lugar donde ocurrió un hecho.",
+          "fichas": [
+            {
+              "id": 131,
+              "titulo": "Aislamiento del sitio",
+              "contenido": "El sitio del suceso es el lugar donde ocurrió un hecho que debe investigarse. Su resguardo busca que nada se altere hasta que llegue el personal especializado.\n\nSegún el Procedimiento Ficticio PF-12, se establece un perímetro amplio usando cinta o barreras, se define un único punto de acceso y se impide el ingreso de personas ajenas. Si hay víctimas, la atención de salud tiene prioridad sobre la preservación.\n\nEs recomendable que el perímetro inicial sea más amplio de lo que parece necesario: siempre es posible reducirlo después, pero no recuperar evidencia perdida.",
+              "puntosClave": [
+                "Objetivo: que nada se altere hasta la llegada de especialistas.",
+                "Perímetro amplio con un único punto de acceso.",
+                "Las víctimas se atienden antes que la preservación.",
+                "Es mejor un perímetro grande que se reduce después."
+              ]
+            },
+            {
+              "id": 132,
+              "titulo": "Registro y cadena de custodia",
+              "contenido": "Todo lo observado se anota en un registro con hora de llegada, condiciones del lugar, personas presentes y acciones realizadas. Se debe registrar quién ingresa y sale del perímetro.\n\nLa cadena de custodia es el registro continuo de quién tuvo una evidencia, cuándo y para qué. Si se rompe, la evidencia pierde valor. Por eso no se deben mover objetos salvo riesgo inminente, y si se mueven, se documenta la posición original.",
+              "puntosClave": [
+                "Registrar hora, condiciones, personas y acciones.",
+                "Controlar quién entra y sale del perímetro.",
+                "Cadena de custodia: quién, cuándo y para qué.",
+                "No mover objetos salvo riesgo; si se mueven, documentarlo."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 1301,
+              "enunciado": "¿Cuál es el objetivo principal del resguardo del sitio del suceso?",
+              "explicacion": "Se busca preservar el lugar sin alteraciones para la investigación.",
+              "alternativas": [
+                { "texto": "Que nada se altere hasta la llegada de especialistas", "correcta": true, "retroalimentacion": "Correcto: preservar es el objetivo." },
+                { "texto": "Limpiar el lugar rápidamente", "correcta": false, "retroalimentacion": "Incorrecto: limpiar destruye evidencia." },
+                { "texto": "Permitir que los testigos recorran el lugar", "correcta": false, "retroalimentacion": "Incorrecto: el acceso debe restringirse." }
+              ]
+            },
+            {
+              "id": 1302,
+              "enunciado": "Si en el sitio hay una víctima herida, ¿qué es prioritario?",
+              "explicacion": "La vida está sobre la preservación de evidencias.",
+              "alternativas": [
+                { "texto": "Preservar la evidencia sin tocar nada", "correcta": false, "retroalimentacion": "Incorrecto: la víctima tiene prioridad." },
+                { "texto": "Atender a la víctima y documentar lo que se modifique", "correcta": true, "retroalimentacion": "Correcto: primero la vida, luego documentar los cambios." },
+                { "texto": "Esperar a los especialistas", "correcta": false, "retroalimentacion": "Incorrecto: la atención no puede esperar." }
+              ]
+            },
+            {
+              "id": 1303,
+              "enunciado": "¿Cuántos puntos de acceso al perímetro recomienda PF-12?",
+              "explicacion": "Un único acceso permite controlar quién entra y sale.",
+              "alternativas": [
+                { "texto": "Uno", "correcta": true, "retroalimentacion": "Correcto: un único acceso controlado." },
+                { "texto": "Dos, uno de entrada y otro de salida", "correcta": false, "retroalimentacion": "Incorrecto: dificulta el control." },
+                { "texto": "Los que sean necesarios", "correcta": false, "retroalimentacion": "Incorrecto: más accesos implican menos control." }
+              ]
+            },
+            {
+              "id": 1304,
+              "enunciado": "La cadena de custodia registra...",
+              "explicacion": "Documenta quién tuvo la evidencia, cuándo y para qué.",
+              "alternativas": [
+                { "texto": "Solo el lugar donde se encontró la evidencia", "correcta": false, "retroalimentacion": "Incorrecto: es un registro continuo." },
+                { "texto": "Quién tuvo la evidencia, cuándo y para qué", "correcta": true, "retroalimentacion": "Correcto: garantiza su integridad." },
+                { "texto": "El valor económico de la evidencia", "correcta": false, "retroalimentacion": "Incorrecto: no tiene relación." }
+              ]
+            },
+            {
+              "id": 1305,
+              "enunciado": "¿Por qué conviene un perímetro inicial amplio?",
+              "explicacion": "Se puede reducir después, pero la evidencia perdida no se recupera.",
+              "alternativas": [
+                { "texto": "Porque siempre se puede reducir, pero no recuperar evidencia perdida", "correcta": true, "retroalimentacion": "Correcto: es la decisión más segura." },
+                { "texto": "Para que el público no vea nada", "correcta": false, "retroalimentacion": "Incorrecto: el objetivo es preservar." },
+                { "texto": "No conviene; es mejor uno pequeño y preciso", "correcta": false, "retroalimentacion": "Incorrecto: un perímetro pequeño arriesga evidencia." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 1351,
+              "titulo": "Local comercial forzado",
+              "situacion": "Llegas a un local comercial cuya puerta fue forzada durante la noche. El dueño quiere entrar de inmediato para revisar qué falta y ordenar. Hay vidrios en el suelo y huellas de barro cerca de la caja.",
+              "pregunta": "¿Qué corresponde hacer?",
+              "dificultad": "MEDIA",
+              "fundamento": "PF-12 indica aislar el sitio, impedir el ingreso de personas ajenas y registrar lo observado para preservar evidencias como las huellas.",
+              "opciones": [
+                { "texto": "Permitir que el dueño entre, ya que es su propiedad", "puntaje": 0, "retroalimentacion": "El ingreso puede destruir las huellas y otras evidencias." },
+                { "texto": "Aislar el local, explicar al dueño por qué debe esperar y registrar lo observado", "puntaje": 2, "retroalimentacion": "Correcto: se preserva la evidencia y se informa al afectado." },
+                { "texto": "Entrar tú mismo a revisar para adelantar el trabajo", "puntaje": 0, "retroalimentacion": "Tu ingreso también altera el sitio." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Normativa y Reglamento Interno",
+      "descripcion": "Deberes del estudiante en formación, conducto regular y disciplina. Normas ficticias de ejemplo.",
+      "icono": "normativa",
+      "color": "#7A5900",
+      "unidades": [
+        {
+          "id": 21,
+          "numero": 1,
+          "titulo": "Deberes y conducta del estudiante",
+          "resumen": "Obligaciones, presentación personal y conducta esperada durante la formación.",
+          "fichas": [
+            {
+              "id": 211,
+              "titulo": "Deberes generales",
+              "contenido": "El Reglamento Ficticio de Estudiantes (RFE) establece que el estudiante en formación debe cumplir puntualmente sus actividades académicas, mantener una presentación personal impecable y tratar con respeto a todas las personas.\n\nLa puntualidad no es solo llegar a la hora: implica estar preparado, con el material requerido y en condiciones de comenzar. La presentación personal refleja disciplina y respeto por la institución.\n\nEl estudiante debe además resguardar la información a la que accede durante su formación y no difundirla por redes sociales ni otros medios.",
+              "puntosClave": [
+                "Puntualidad: llegar a tiempo y preparado.",
+                "Presentación personal impecable.",
+                "Trato respetuoso hacia todas las personas.",
+                "Resguardar la información y no difundirla en redes."
+              ]
+            },
+            {
+              "id": 212,
+              "titulo": "Faltas y medidas formativas",
+              "contenido": "El RFE clasifica las faltas en leves, graves y gravísimas según su impacto. Un atraso aislado es una falta leve; la difusión de información reservada es una falta grave; poner en riesgo la integridad de otra persona es gravísima.\n\nLas medidas tienen un carácter formativo: buscan que el estudiante reconozca el error y lo corrija. Antes de aplicar una medida, el estudiante tiene derecho a ser escuchado y a presentar sus descargos.",
+              "puntosClave": [
+                "Faltas: leves, graves y gravísimas.",
+                "Las medidas tienen carácter formativo.",
+                "Derecho a ser escuchado y presentar descargos."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 2101,
+              "enunciado": "Según el RFE, la puntualidad implica...",
+              "explicacion": "No basta con llegar: hay que estar preparado para comenzar.",
+              "alternativas": [
+                { "texto": "Llegar a la hora exacta, aunque sin el material", "correcta": false, "retroalimentacion": "Incorrecto: también hay que estar preparado." },
+                { "texto": "Llegar a tiempo, preparado y con el material requerido", "correcta": true, "retroalimentacion": "Correcto: es una puntualidad completa." },
+                { "texto": "Llegar antes que el instructor", "correcta": false, "retroalimentacion": "Incorrecto: no es el criterio del reglamento." }
+              ]
+            },
+            {
+              "id": 2102,
+              "enunciado": "Publicar en redes sociales información reservada de la formación es una falta...",
+              "explicacion": "El RFE la clasifica como grave.",
+              "alternativas": [
+                { "texto": "Leve", "correcta": false, "retroalimentacion": "Incorrecto: su impacto es mayor." },
+                { "texto": "Grave", "correcta": true, "retroalimentacion": "Correcto: difundir información reservada es grave." },
+                { "texto": "No es falta si la cuenta es privada", "correcta": false, "retroalimentacion": "Incorrecto: igualmente se difunde la información." }
+              ]
+            },
+            {
+              "id": 2103,
+              "enunciado": "¿Cuál es el propósito de las medidas según el RFE?",
+              "explicacion": "Son formativas: buscan reconocimiento y corrección del error.",
+              "alternativas": [
+                { "texto": "Castigar ejemplarmente", "correcta": false, "retroalimentacion": "Incorrecto: el enfoque es formativo." },
+                { "texto": "Formar: que el estudiante reconozca y corrija el error", "correcta": true, "retroalimentacion": "Correcto: tienen carácter formativo." },
+                { "texto": "Reducir la cantidad de estudiantes", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 2104,
+              "enunciado": "Antes de aplicar una medida, el estudiante tiene derecho a...",
+              "explicacion": "El derecho a ser escuchado y presentar descargos es parte del debido proceso.",
+              "alternativas": [
+                { "texto": "Ser escuchado y presentar sus descargos", "correcta": true, "retroalimentacion": "Correcto: es un derecho del estudiante." },
+                { "texto": "Elegir la medida que prefiera", "correcta": false, "retroalimentacion": "Incorrecto." },
+                { "texto": "Ninguno, la medida es inmediata", "correcta": false, "retroalimentacion": "Incorrecto: siempre debe ser escuchado." }
+              ]
+            },
+            {
+              "id": 2105,
+              "enunciado": "Poner en riesgo la integridad de otra persona se considera una falta...",
+              "explicacion": "Es la categoría de mayor gravedad.",
+              "alternativas": [
+                { "texto": "Leve", "correcta": false, "retroalimentacion": "Incorrecto." },
+                { "texto": "Grave", "correcta": false, "retroalimentacion": "Incorrecto: es aún más seria." },
+                { "texto": "Gravísima", "correcta": true, "retroalimentacion": "Correcto: es la categoría más alta." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 2151,
+              "titulo": "Fotografía en el aula",
+              "situacion": "Un compañero toma una fotografía de una presentación con material reservado y dice que la subirá a un grupo de mensajería del curso \"para estudiar\".",
+              "pregunta": "¿Qué deberías hacer?",
+              "dificultad": "BASICA",
+              "fundamento": "El RFE obliga a resguardar la información a la que se accede durante la formación; su difusión es una falta grave aunque la intención sea estudiar.",
+              "opciones": [
+                { "texto": "Nada, ya que la intención es buena", "puntaje": 0, "retroalimentacion": "La intención no cambia que se difunda información reservada." },
+                { "texto": "Recordarle que es información reservada y sugerir pedir el material oficial al instructor", "puntaje": 2, "retroalimentacion": "Correcto: previene la falta y propone una alternativa adecuada." },
+                { "texto": "Pedirle que te la envíe solo a ti", "puntaje": 0, "retroalimentacion": "Sigue siendo difusión de información reservada." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "numero": 2,
+          "titulo": "Conducto regular y jerarquía",
+          "resumen": "Cómo canalizar solicitudes y comunicaciones respetando la estructura jerárquica.",
+          "fichas": [
+            {
+              "id": 221,
+              "titulo": "El conducto regular",
+              "contenido": "El conducto regular es el camino formal por el cual se canalizan las solicitudes, reclamos y comunicaciones, respetando el orden jerárquico. En el RFE ficticio, el estudiante se dirige primero a su instructor directo.\n\nSaltarse el conducto regular genera desorden y debilita la confianza. Solo en situaciones excepcionales, como un riesgo para la integridad o un conflicto con el propio superior directo, se puede acudir al nivel siguiente, dejando constancia del motivo.",
+              "puntosClave": [
+                "Camino formal según el orden jerárquico.",
+                "Primero se acude al instructor directo.",
+                "Excepciones: riesgo para la integridad o conflicto con el superior directo.",
+                "Al usar una excepción se deja constancia del motivo."
+              ]
+            },
+            {
+              "id": 222,
+              "titulo": "Comunicación con superiores",
+              "contenido": "La comunicación con superiores debe ser respetuosa, clara y concisa. Antes de plantear un tema conviene ordenar las ideas: qué se necesita, por qué y qué alternativas se proponen.\n\nRecibir una instrucción implica confirmar que se entendió. Si una instrucción parece contraria a la norma, se debe expresar la duda de manera respetuosa y por el conducto regular.",
+              "puntosClave": [
+                "Respetuosa, clara y concisa.",
+                "Ordenar ideas: qué, por qué y qué alternativas.",
+                "Confirmar que se entendió la instrucción.",
+                "Dudas sobre la norma: expresarlas con respeto y por conducto regular."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 2201,
+              "enunciado": "Según el RFE, ¿a quién se dirige primero un estudiante con una solicitud?",
+              "explicacion": "El conducto regular comienza en el instructor directo.",
+              "alternativas": [
+                { "texto": "Al director de la escuela", "correcta": false, "retroalimentacion": "Incorrecto: se salta el conducto regular." },
+                { "texto": "A su instructor directo", "correcta": true, "retroalimentacion": "Correcto: es el primer nivel." },
+                { "texto": "A cualquier funcionario disponible", "correcta": false, "retroalimentacion": "Incorrecto: debe seguirse el orden jerárquico." }
+              ]
+            },
+            {
+              "id": 2202,
+              "enunciado": "¿Cuándo se puede acudir directamente al nivel siguiente?",
+              "explicacion": "Solo en excepciones como riesgo para la integridad o conflicto con el superior directo.",
+              "alternativas": [
+                { "texto": "Cuando el instructor tarda en responder un día", "correcta": false, "retroalimentacion": "Incorrecto: no es una excepción." },
+                { "texto": "Ante riesgo para la integridad o conflicto con el superior directo", "correcta": true, "retroalimentacion": "Correcto: son las excepciones previstas." },
+                { "texto": "Nunca", "correcta": false, "retroalimentacion": "Incorrecto: existen excepciones." }
+              ]
+            },
+            {
+              "id": 2203,
+              "enunciado": "Al recibir una instrucción, ¿qué es recomendable?",
+              "explicacion": "Confirmar lo entendido evita errores de ejecución.",
+              "alternativas": [
+                { "texto": "Confirmar que se entendió", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Ejecutarla sin decir nada", "correcta": false, "retroalimentacion": "Incorrecto: puede haber malentendidos." },
+                { "texto": "Pedir que la entreguen por escrito siempre", "correcta": false, "retroalimentacion": "Incorrecto: no es la regla general." }
+              ]
+            },
+            {
+              "id": 2204,
+              "enunciado": "Si una instrucción parece contraria a la norma, corresponde...",
+              "explicacion": "Expresar la duda con respeto y por el conducto regular.",
+              "alternativas": [
+                { "texto": "Ignorarla en silencio", "correcta": false, "retroalimentacion": "Incorrecto: no resuelve la situación." },
+                { "texto": "Comentarla en redes sociales", "correcta": false, "retroalimentacion": "Incorrecto: además sería una falta." },
+                { "texto": "Expresar la duda con respeto y por conducto regular", "correcta": true, "retroalimentacion": "Correcto." }
+              ]
+            },
+            {
+              "id": 2205,
+              "enunciado": "Al plantear un tema a un superior conviene...",
+              "explicacion": "Ordenar las ideas: qué se necesita, por qué y qué alternativas se proponen.",
+              "alternativas": [
+                { "texto": "Improvisar para no quitarle tiempo", "correcta": false, "retroalimentacion": "Incorrecto: la improvisación suele alargar la conversación." },
+                { "texto": "Ordenar qué se necesita, por qué y qué alternativas hay", "correcta": true, "retroalimentacion": "Correcto: comunicación clara y concisa." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 2251,
+              "titulo": "Permiso por situación familiar",
+              "situacion": "Necesitas solicitar un permiso por una situación familiar. Tu instructor directo está disponible, pero un compañero te sugiere ir directamente con el jefe de curso porque \"es más rápido\".",
+              "pregunta": "¿Cómo canalizas la solicitud?",
+              "dificultad": "BASICA",
+              "fundamento": "El conducto regular indica acudir primero al instructor directo; no existe una excepción que justifique saltarlo.",
+              "opciones": [
+                { "texto": "Ir directamente con el jefe de curso", "puntaje": 0, "retroalimentacion": "Se salta el conducto regular sin una causa excepcional." },
+                { "texto": "Plantear la solicitud a tu instructor directo de forma clara y respetuosa", "puntaje": 2, "retroalimentacion": "Correcto: respeta el conducto regular." },
+                { "texto": "Enviar un correo a todos los superiores para asegurar respuesta", "puntaje": 0, "retroalimentacion": "Genera desorden y no respeta el orden jerárquico." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Primeros Auxilios",
+      "descripcion": "Evaluación inicial, soporte vital básico y manejo de lesiones frecuentes.",
+      "icono": "salud",
+      "color": "#B3261E",
+      "unidades": [
+        {
+          "id": 31,
+          "numero": 1,
+          "titulo": "Evaluación inicial y soporte vital",
+          "resumen": "Seguridad de la escena, evaluación de conciencia y respiración, y reanimación básica.",
+          "fichas": [
+            {
+              "id": 311,
+              "titulo": "Evaluación primaria",
+              "contenido": "Antes de acercarse a una víctima se verifica que la escena sea segura. Luego se evalúa la conciencia hablándole en voz alta y tocándole suavemente los hombros.\n\nSi no responde, se pide ayuda, se solicita que alguien llame a emergencias y se abre la vía aérea inclinando la cabeza hacia atrás y elevando el mentón. Después se observa si respira normalmente durante no más de 10 segundos.\n\nSi la persona no respira o solo jadea, se inicia la reanimación cardiopulmonar (RCP).",
+              "puntosClave": [
+                "Primero: escena segura.",
+                "Evaluar conciencia con voz y toque en los hombros.",
+                "Pedir ayuda y llamar a emergencias.",
+                "Observar la respiración por no más de 10 segundos."
+              ]
+            },
+            {
+              "id": 312,
+              "titulo": "Reanimación cardiopulmonar (RCP)",
+              "contenido": "La RCP en adultos se realiza con compresiones en el centro del pecho, con las manos entrelazadas y los brazos rectos. Se recomienda una frecuencia de 100 a 120 compresiones por minuto y una profundidad de unos 5 a 6 centímetros, permitiendo que el pecho vuelva a su posición entre cada compresión.\n\nSi la persona que asiste está entrenada, puede alternar 30 compresiones con 2 ventilaciones. Si no, se realizan solo compresiones continuas. Cuando llega un desfibrilador externo automático (DEA), se enciende y se siguen sus instrucciones.",
+              "puntosClave": [
+                "Compresiones en el centro del pecho, brazos rectos.",
+                "Frecuencia de 100 a 120 por minuto.",
+                "Profundidad aproximada de 5 a 6 cm.",
+                "Relación 30:2 si se está entrenado; si no, solo compresiones.",
+                "Usar el DEA apenas esté disponible."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 3101,
+              "enunciado": "¿Qué se verifica antes de acercarse a una víctima?",
+              "explicacion": "Un rescatista lesionado no puede ayudar.",
+              "alternativas": [
+                { "texto": "Que la escena sea segura", "correcta": true, "retroalimentacion": "Correcto: la seguridad es el primer paso." },
+                { "texto": "El nombre de la víctima", "correcta": false, "retroalimentacion": "Incorrecto: no es prioritario." },
+                { "texto": "Si hay testigos", "correcta": false, "retroalimentacion": "Incorrecto: primero la seguridad." }
+              ]
+            },
+            {
+              "id": 3102,
+              "enunciado": "¿Cuál es la frecuencia recomendada de compresiones en adultos?",
+              "explicacion": "Se recomiendan entre 100 y 120 compresiones por minuto.",
+              "alternativas": [
+                { "texto": "60 a 80 por minuto", "correcta": false, "retroalimentacion": "Incorrecto: es demasiado lenta." },
+                { "texto": "100 a 120 por minuto", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "150 a 180 por minuto", "correcta": false, "retroalimentacion": "Incorrecto: es demasiado rápida para ser efectiva." }
+              ]
+            },
+            {
+              "id": 3103,
+              "enunciado": "¿Por cuánto tiempo máximo se observa si la víctima respira?",
+              "explicacion": "No más de 10 segundos, para no retrasar la RCP.",
+              "alternativas": [
+                { "texto": "10 segundos", "correcta": true, "retroalimentacion": "Correcto: evitar demoras en iniciar la RCP." },
+                { "texto": "30 segundos", "correcta": false, "retroalimentacion": "Incorrecto: retrasa la reanimación." },
+                { "texto": "1 minuto", "correcta": false, "retroalimentacion": "Incorrecto: es demasiado tiempo." }
+              ]
+            },
+            {
+              "id": 3104,
+              "enunciado": "Si quien asiste no está entrenado en ventilaciones, debe...",
+              "explicacion": "Las compresiones continuas son la recomendación para personas no entrenadas.",
+              "alternativas": [
+                { "texto": "No hacer nada hasta que llegue la ambulancia", "correcta": false, "retroalimentacion": "Incorrecto: las compresiones salvan vidas." },
+                { "texto": "Realizar solo compresiones continuas", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Dar solo ventilaciones", "correcta": false, "retroalimentacion": "Incorrecto: las compresiones son lo esencial." }
+              ]
+            },
+            {
+              "id": 3105,
+              "enunciado": "Cuando llega un DEA, se debe...",
+              "explicacion": "El DEA guía con instrucciones de voz y debe usarse cuanto antes.",
+              "alternativas": [
+                { "texto": "Terminar el ciclo de 10 minutos de RCP antes de usarlo", "correcta": false, "retroalimentacion": "Incorrecto: se usa apenas esté disponible." },
+                { "texto": "Encenderlo y seguir sus instrucciones", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Usarlo solo si un médico lo autoriza", "correcta": false, "retroalimentacion": "Incorrecto: está diseñado para uso público." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 3151,
+              "titulo": "Persona desplomada en un andén",
+              "situacion": "En un andén del metro una persona adulta se desploma. No responde cuando le hablas ni cuando tocas sus hombros. Hay mucha gente alrededor y un guardia del metro se acerca.",
+              "pregunta": "¿Cuál es la secuencia correcta?",
+              "dificultad": "MEDIA",
+              "fundamento": "Tras verificar seguridad y conciencia, se pide ayuda y DEA, se abre la vía aérea y se evalúa la respiración por no más de 10 segundos. Si no respira normalmente, se inicia RCP.",
+              "opciones": [
+                { "texto": "Pedir al guardia que llame a emergencias y traiga un DEA, abrir la vía aérea, evaluar respiración y, si no respira, iniciar compresiones", "puntaje": 2, "retroalimentacion": "Secuencia correcta y completa." },
+                { "texto": "Iniciar compresiones de inmediato sin pedir ayuda", "puntaje": 1, "retroalimentacion": "Iniciar RCP es valioso, pero sin pedir ayuda ni DEA se pierde tiempo crítico." },
+                { "texto": "Sentarla y darle agua", "puntaje": 0, "retroalimentacion": "Una persona inconsciente puede atragantarse; no corresponde." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "numero": 2,
+          "titulo": "Hemorragias, quemaduras y traumatismos",
+          "resumen": "Control de sangrado, manejo inicial de quemaduras e inmovilización básica.",
+          "fichas": [
+            {
+              "id": 321,
+              "titulo": "Control de hemorragias",
+              "contenido": "Ante una hemorragia externa, la primera medida es aplicar presión directa sobre la herida con un apósito o paño limpio, usando guantes si es posible. Si el apósito se empapa, no se retira: se agrega otro encima y se mantiene la presión.\n\nSi la hemorragia es grave en una extremidad y no se controla con presión directa, puede ser necesario un torniquete colocado unos centímetros por sobre la herida, anotando la hora de colocación. Mientras tanto se vigila el estado de conciencia de la víctima.",
+              "puntosClave": [
+                "Presión directa con apósito limpio y guantes.",
+                "Si se empapa, agregar otro apósito sin retirar el primero.",
+                "Torniquete solo en hemorragias graves de extremidades.",
+                "Anotar la hora de colocación del torniquete."
+              ]
+            },
+            {
+              "id": 322,
+              "titulo": "Quemaduras y sospecha de fractura",
+              "contenido": "En quemaduras térmicas se enfría la zona con agua corriente a temperatura ambiente durante unos 10 a 20 minutos. No se aplican cremas, pasta de dientes ni hielo, y no se revientan las ampollas. Luego se cubre con un apósito limpio.\n\nAnte la sospecha de fractura, se evita mover la zona afectada y se inmoviliza en la posición encontrada. Si se sospecha lesión de columna, no se mueve a la víctima salvo peligro inminente.",
+              "puntosClave": [
+                "Quemaduras: agua corriente 10 a 20 minutos.",
+                "No usar cremas, pasta de dientes ni hielo.",
+                "No reventar ampollas.",
+                "Fracturas: inmovilizar en la posición encontrada.",
+                "Sospecha de columna: no mover salvo peligro inminente."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 3201,
+              "enunciado": "¿Cuál es la primera medida ante una hemorragia externa?",
+              "explicacion": "La presión directa controla la mayoría de las hemorragias.",
+              "alternativas": [
+                { "texto": "Presión directa sobre la herida", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Colocar un torniquete", "correcta": false, "retroalimentacion": "Incorrecto: el torniquete es para casos graves no controlados." },
+                { "texto": "Lavar la herida con alcohol", "correcta": false, "retroalimentacion": "Incorrecto: primero se controla el sangrado." }
+              ]
+            },
+            {
+              "id": 3202,
+              "enunciado": "Si el apósito se empapa de sangre, se debe...",
+              "explicacion": "Retirarlo puede reabrir el coágulo.",
+              "alternativas": [
+                { "texto": "Retirarlo y poner uno nuevo", "correcta": false, "retroalimentacion": "Incorrecto: puede reactivar el sangrado." },
+                { "texto": "Agregar otro encima y mantener la presión", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Dejar de presionar para que respire la herida", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 3203,
+              "enunciado": "¿Qué se aplica sobre una quemadura térmica?",
+              "explicacion": "El agua corriente a temperatura ambiente enfría y limita el daño.",
+              "alternativas": [
+                { "texto": "Hielo directo", "correcta": false, "retroalimentacion": "Incorrecto: puede dañar más el tejido." },
+                { "texto": "Pasta de dientes", "correcta": false, "retroalimentacion": "Incorrecto: es un mito y favorece infecciones." },
+                { "texto": "Agua corriente durante 10 a 20 minutos", "correcta": true, "retroalimentacion": "Correcto." }
+              ]
+            },
+            {
+              "id": 3204,
+              "enunciado": "Ante sospecha de fractura, lo correcto es...",
+              "explicacion": "Inmovilizar en la posición encontrada evita agravar la lesión.",
+              "alternativas": [
+                { "texto": "Intentar enderezar el hueso", "correcta": false, "retroalimentacion": "Incorrecto: puede agravar la lesión." },
+                { "texto": "Inmovilizar en la posición encontrada", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Pedir a la persona que camine para probar", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 3205,
+              "enunciado": "¿Qué se debe anotar al colocar un torniquete?",
+              "explicacion": "La hora es clave para el equipo médico.",
+              "alternativas": [
+                { "texto": "La hora de colocación", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "El color del torniquete", "correcta": false, "retroalimentacion": "Incorrecto." },
+                { "texto": "Nada, no es necesario", "correcta": false, "retroalimentacion": "Incorrecto: el tiempo es determinante." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 3251,
+              "titulo": "Accidente de cocina",
+              "situacion": "En el casino de la escuela, un funcionario se quema el antebrazo con aceite caliente. La piel está enrojecida y comienzan a formarse ampollas. Alguien propone ponerle mantequilla.",
+              "pregunta": "¿Qué haces?",
+              "dificultad": "BASICA",
+              "fundamento": "Las quemaduras se enfrían con agua corriente 10 a 20 minutos, sin cremas ni grasas, sin reventar ampollas, y luego se cubren con un apósito limpio.",
+              "opciones": [
+                { "texto": "Aplicar mantequilla para calmar el ardor", "puntaje": 0, "retroalimentacion": "Las grasas retienen calor y favorecen infecciones." },
+                { "texto": "Enfriar con agua corriente 10 a 20 minutos y cubrir con un apósito limpio", "puntaje": 2, "retroalimentacion": "Correcto." },
+                { "texto": "Reventar las ampollas para que no se infecten", "puntaje": 0, "retroalimentacion": "Reventar ampollas aumenta el riesgo de infección." }
+              ]
+            },
+            {
+              "id": 3252,
+              "titulo": "Caída durante instrucción en terreno",
+              "situacion": "Durante una instrucción en terreno, un compañero cae desde una altura de dos metros. Está consciente, se queja de dolor en el cuello y no siente bien las piernas. El lugar es seguro.",
+              "pregunta": "¿Cuál es la actuación correcta?",
+              "dificultad": "AVANZADA",
+              "fundamento": "Ante sospecha de lesión de columna no se mueve a la víctima salvo peligro inminente. Se mantiene la cabeza alineada, se pide ayuda especializada y se vigila conciencia y respiración.",
+              "opciones": [
+                { "texto": "Ayudarlo a ponerse de pie para trasladarlo rápido", "puntaje": 0, "retroalimentacion": "Mover a la víctima puede agravar una lesión medular." },
+                { "texto": "No moverlo, sostener la cabeza alineada, pedir ayuda especializada y vigilar su estado", "puntaje": 2, "retroalimentacion": "Correcto: protege la columna y asegura atención." },
+                { "texto": "Dejarlo solo mientras vas a buscar ayuda", "puntaje": 1, "retroalimentacion": "Pedir ayuda es necesario, pero lo ideal es que otra persona lo haga mientras tú lo acompañas." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Comunicación, Ética y Derechos Humanos",
+      "descripcion": "Comunicación efectiva, trato digno a las personas y principios éticos del servicio.",
+      "icono": "comunicacion",
+      "color": "#2B5C8A",
+      "unidades": [
+        {
+          "id": 41,
+          "numero": 1,
+          "titulo": "Comunicación efectiva y trato al ciudadano",
+          "resumen": "Escucha activa, comunicación no verbal y atención de grupos de especial protección.",
+          "fichas": [
+            {
+              "id": 411,
+              "titulo": "Escucha activa y comunicación no verbal",
+              "contenido": "La escucha activa consiste en prestar atención completa a quien habla, sin interrumpir, mostrando interés con gestos y confirmando lo entendido. Permite obtener mejor información y reduce la tensión.\n\nLa comunicación no verbal transmite tanto como las palabras: postura abierta, contacto visual adecuado y un tono de voz tranquilo generan confianza. Cruzar los brazos, mirar el celular o invadir el espacio personal produce el efecto contrario.",
+              "puntosClave": [
+                "Escucha activa: atención completa y sin interrumpir.",
+                "Confirmar lo entendido.",
+                "Postura abierta y tono tranquilo generan confianza.",
+                "Evitar mirar el celular o invadir el espacio personal."
+              ]
+            },
+            {
+              "id": 412,
+              "titulo": "Grupos de especial protección",
+              "contenido": "Algunas personas requieren una atención especialmente cuidadosa: niños, niñas y adolescentes, personas mayores, personas con discapacidad, migrantes que no dominan el idioma y víctimas de violencia.\n\nCon ellas se adapta el lenguaje, se verifica que comprendan, se resguarda su privacidad y se evita la revictimización, es decir, hacerles repetir innecesariamente experiencias dolorosas. Cuando corresponde, se solicita apoyo de intérpretes o de personal especializado.",
+              "puntosClave": [
+                "Adaptar el lenguaje y verificar la comprensión.",
+                "Resguardar la privacidad.",
+                "Evitar la revictimización.",
+                "Solicitar intérpretes o personal especializado cuando corresponda."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 4101,
+              "enunciado": "¿Qué caracteriza a la escucha activa?",
+              "explicacion": "Atender completamente, sin interrumpir y confirmando lo entendido.",
+              "alternativas": [
+                { "texto": "Escuchar mientras se completa un formulario sin mirar", "correcta": false, "retroalimentacion": "Incorrecto: no hay atención completa." },
+                { "texto": "Prestar atención completa y confirmar lo entendido", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Interrumpir para ahorrar tiempo", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 4102,
+              "enunciado": "¿Qué conducta no verbal genera confianza?",
+              "explicacion": "Postura abierta y tono tranquilo transmiten disposición a ayudar.",
+              "alternativas": [
+                { "texto": "Brazos cruzados", "correcta": false, "retroalimentacion": "Incorrecto: transmite cierre o rechazo." },
+                { "texto": "Mirar el celular", "correcta": false, "retroalimentacion": "Incorrecto: transmite desinterés." },
+                { "texto": "Postura abierta y tono tranquilo", "correcta": true, "retroalimentacion": "Correcto." }
+              ]
+            },
+            {
+              "id": 4103,
+              "enunciado": "¿Qué significa evitar la revictimización?",
+              "explicacion": "No hacer repetir innecesariamente experiencias dolorosas a la víctima.",
+              "alternativas": [
+                { "texto": "No hacer repetir innecesariamente experiencias dolorosas", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "No tomar la denuncia", "correcta": false, "retroalimentacion": "Incorrecto: la denuncia debe recibirse." },
+                { "texto": "Derivar siempre a la víctima a otra institución", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 4104,
+              "enunciado": "Si una persona migrante no comprende bien el idioma, corresponde...",
+              "explicacion": "Adaptar el lenguaje y solicitar un intérprete si es necesario.",
+              "alternativas": [
+                { "texto": "Hablar más fuerte", "correcta": false, "retroalimentacion": "Incorrecto: no mejora la comprensión." },
+                { "texto": "Adaptar el lenguaje y solicitar intérprete si es necesario", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Pedirle que vuelva con alguien que hable español", "correcta": false, "retroalimentacion": "Incorrecto: se le niega la atención." }
+              ]
+            },
+            {
+              "id": 4105,
+              "enunciado": "¿Cuál de estos NO es un grupo de especial protección según la ficha?",
+              "explicacion": "La ficha menciona niños, personas mayores, personas con discapacidad, migrantes y víctimas.",
+              "alternativas": [
+                { "texto": "Personas mayores", "correcta": false, "retroalimentacion": "Incorrecto: sí es un grupo de especial protección." },
+                { "texto": "Víctimas de violencia", "correcta": false, "retroalimentacion": "Incorrecto: sí lo es." },
+                { "texto": "Personas que hacen una consulta de tránsito", "correcta": true, "retroalimentacion": "Correcto: no es por sí mismo un grupo de especial protección." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 4151,
+              "titulo": "Niño extraviado",
+              "situacion": "En una feria encuentras a un niño de unos seis años llorando, que dice haber perdido a su mamá. Está asustado y no recuerda su dirección.",
+              "pregunta": "¿Cuál es la mejor forma de abordarlo?",
+              "dificultad": "BASICA",
+              "fundamento": "Con niños se adapta el lenguaje, se baja a su altura, se le tranquiliza y se informa a la central para coordinar la búsqueda, permaneciendo en un lugar visible.",
+              "opciones": [
+                { "texto": "Agacharte a su altura, hablarle con calma, quedarte en un lugar visible e informar a la central", "puntaje": 2, "retroalimentacion": "Correcto: contiene al niño y facilita el reencuentro." },
+                { "texto": "Llevarlo de inmediato a la unidad policial", "puntaje": 1, "retroalimentacion": "Puede ser necesario después, pero alejarse reduce la probabilidad de que su madre lo encuentre." },
+                { "texto": "Pedirle que deje de llorar para poder ayudarlo", "puntaje": 0, "retroalimentacion": "Exigirle calma aumenta su angustia." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "numero": 2,
+          "titulo": "Ética profesional y derechos humanos",
+          "resumen": "Integridad, dignidad de las personas y principios que orientan el servicio.",
+          "fichas": [
+            {
+              "id": 421,
+              "titulo": "Integridad y probidad",
+              "contenido": "La integridad es actuar de forma coherente con los valores institucionales, incluso cuando nadie observa. La probidad exige un desempeño honesto y leal, anteponiendo el interés general al particular.\n\nAceptar regalos o favores por el ejercicio de la función, usar recursos institucionales para fines personales o encubrir faltas de otros son conductas contrarias a la probidad.",
+              "puntosClave": [
+                "Integridad: coherencia con los valores, aun sin ser observado.",
+                "Probidad: desempeño honesto y leal.",
+                "No aceptar regalos ni favores por la función.",
+                "No usar recursos institucionales para fines personales."
+              ]
+            },
+            {
+              "id": 422,
+              "titulo": "Dignidad y no discriminación",
+              "contenido": "Toda persona tiene la misma dignidad y derechos, sin importar su origen, nacionalidad, sexo, edad, religión, condición social u otra característica. El servicio debe prestarse sin discriminación arbitraria.\n\nEl trato digno incluye usar un lenguaje respetuoso, informar a las personas de sus derechos cuando corresponde y resguardar su integridad física y psíquica. Los principios de legalidad, necesidad y proporcionalidad orientan cualquier intervención que limite derechos.",
+              "puntosClave": [
+                "Igual dignidad y derechos para todas las personas.",
+                "Servicio sin discriminación arbitraria.",
+                "Lenguaje respetuoso e información de derechos.",
+                "Legalidad, necesidad y proporcionalidad ante cualquier intervención."
+              ]
+            }
+          ],
+          "preguntas": [
+            {
+              "id": 4201,
+              "enunciado": "Actuar con coherencia a los valores incluso cuando nadie observa se denomina...",
+              "explicacion": "Es la definición de integridad.",
+              "alternativas": [
+                { "texto": "Integridad", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Oportunidad", "correcta": false, "retroalimentacion": "Incorrecto." },
+                { "texto": "Disciplina formal", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 4202,
+              "enunciado": "Un comerciante ofrece un regalo \"por lo bien que trabajan\". ¿Qué corresponde?",
+              "explicacion": "Aceptar regalos por el ejercicio de la función es contrario a la probidad.",
+              "alternativas": [
+                { "texto": "Aceptarlo si es de bajo valor", "correcta": false, "retroalimentacion": "Incorrecto: el valor no cambia la falta." },
+                { "texto": "Rechazarlo amablemente explicando el motivo", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Aceptarlo y compartirlo con el equipo", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 4203,
+              "enunciado": "¿Cuál de estas conductas es contraria a la probidad?",
+              "explicacion": "Usar recursos institucionales para fines personales vulnera la probidad.",
+              "alternativas": [
+                { "texto": "Informar una falta por el conducto regular", "correcta": false, "retroalimentacion": "Incorrecto: es una conducta adecuada." },
+                { "texto": "Usar el vehículo institucional para un trámite personal", "correcta": true, "retroalimentacion": "Correcto: es un uso indebido de recursos." },
+                { "texto": "Rechazar un favor", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            },
+            {
+              "id": 4204,
+              "enunciado": "¿Qué principios orientan cualquier intervención que limite derechos?",
+              "explicacion": "Legalidad, necesidad y proporcionalidad.",
+              "alternativas": [
+                { "texto": "Rapidez, eficacia y economía", "correcta": false, "retroalimentacion": "Incorrecto." },
+                { "texto": "Legalidad, necesidad y proporcionalidad", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Jerarquía, disciplina y obediencia", "correcta": false, "retroalimentacion": "Incorrecto: son valores internos, no principios de intervención." }
+              ]
+            },
+            {
+              "id": 4205,
+              "enunciado": "El servicio debe prestarse...",
+              "explicacion": "Sin discriminación arbitraria, reconociendo igual dignidad.",
+              "alternativas": [
+                { "texto": "Priorizando según la nacionalidad", "correcta": false, "retroalimentacion": "Incorrecto: sería discriminación arbitraria." },
+                { "texto": "Sin discriminación arbitraria", "correcta": true, "retroalimentacion": "Correcto." },
+                { "texto": "Según la apariencia de la persona", "correcta": false, "retroalimentacion": "Incorrecto." }
+              ]
+            }
+          ],
+          "casos": [
+            {
+              "id": 4251,
+              "titulo": "Compañero usa el vehículo para un trámite",
+              "situacion": "Tu compañero de patrullaje propone pasar a dejar un paquete personal a la casa de un familiar aprovechando el recorrido, \"total queda cerca\".",
+              "pregunta": "¿Cómo respondes?",
+              "dificultad": "MEDIA",
+              "fundamento": "Usar recursos institucionales para fines personales es contrario a la probidad, aunque el desvío sea corto.",
+              "opciones": [
+                { "texto": "Aceptar, porque el desvío es mínimo", "puntaje": 0, "retroalimentacion": "La magnitud no cambia que sea un uso indebido." },
+                { "texto": "Explicarle con respeto que no corresponde usar el vehículo para fines personales y continuar el servicio", "puntaje": 2, "retroalimentacion": "Correcto: actúas con integridad y mantienes el trabajo en equipo." },
+                { "texto": "No decir nada y denunciarlo después en redes sociales", "puntaje": 0, "retroalimentacion": "No previene la falta y la difusión en redes también es inadecuada." }
+              ]
+            },
+            {
+              "id": 4252,
+              "titulo": "Atención a una persona migrante",
+              "situacion": "Un hombre extranjero llega a denunciar el robo de su teléfono. Habla poco español y un funcionario comenta en voz alta que \"seguro lo perdió\".",
+              "pregunta": "¿Qué actuación corresponde?",
+              "dificultad": "AVANZADA",
+              "fundamento": "El servicio se presta sin discriminación arbitraria, adaptando el lenguaje y solicitando apoyo de intérprete si es necesario, con trato digno.",
+              "opciones": [
+                { "texto": "Recibir la denuncia con trato digno, adaptar el lenguaje y gestionar un intérprete si se requiere", "puntaje": 2, "retroalimentacion": "Correcto: garantiza su derecho a ser atendido sin discriminación." },
+                { "texto": "Pedirle que vuelva otro día con un traductor", "puntaje": 0, "retroalimentacion": "Se le niega la atención oportuna." },
+                { "texto": "Tomar solo sus datos básicos sin registrar la denuncia", "puntaje": 1, "retroalimentacion": "Es una atención incompleta que no resguarda sus derechos." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,22 +1,24 @@
 package com.example.esfocarapp.viewmodel
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.esfocarapp.data.AppRepository
-import com.example.esfocarapp.data.local.AppDatabase
+import com.example.esfocarapp.util.Preferencias
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Sesion
 import com.example.esfocarapp.util.Validador
 import kotlinx.coroutines.launch
 
 // ViewModel de los formularios de ingreso y registro.
 // Guarda el ESTADO (textos, errores) y la LÓGICA. La pantalla solo lo muestra.
-class AuthViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val repo = AppRepository(AppDatabase.obtener(app))
+class AuthViewModel(
+    private val repo: AppRepository,
+    private val prefs: Preferencias? = null,
+    private val codigoDocente: String = ""
+) : ViewModel() {
 
     // Valores de los campos
     var alias by mutableStateOf("")
@@ -32,6 +34,14 @@ class AuthViewModel(app: Application) : AndroidViewModel(app) {
     var errorClave by mutableStateOf<String?>(null)
         private set
     var errorConfirmacion by mutableStateOf<String?>(null)
+        private set
+
+    // Registro como docente (requiere el código entregado a los docentes)
+    var esDocente by mutableStateOf(false)
+        private set
+    var codigo by mutableStateOf("")
+        private set
+    var errorCodigo by mutableStateOf<String?>(null)
         private set
 
     var mensaje by mutableStateOf<String?>(null)
@@ -58,6 +68,21 @@ class AuthViewModel(app: Application) : AndroidViewModel(app) {
         mensaje = null
     }
 
+    fun cambiarEsDocente(valor: Boolean) {
+        esDocente = valor
+        if (!valor) {
+            codigo = ""
+            errorCodigo = null
+        }
+        mensaje = null
+    }
+
+    fun cambiarCodigo(valor: String) {
+        codigo = valor
+        errorCodigo = Validador.codigoDocente(valor, codigoDocente)
+        mensaje = null
+    }
+
     // registro = true  -> crear cuenta nueva
     // registro = false -> iniciar sesión
     fun enviar(registro: Boolean, onExito: () -> Unit) {
@@ -65,8 +90,9 @@ class AuthViewModel(app: Application) : AndroidViewModel(app) {
         errorAlias = Validador.alias(alias)
         errorClave = Validador.clave(clave)
         errorConfirmacion = if (registro) Validador.confirmacion(clave, confirmacion) else null
+        errorCodigo = if (registro && esDocente) Validador.codigoDocente(codigo, codigoDocente) else null
 
-        if (errorAlias != null || errorClave != null || errorConfirmacion != null) {
+        if (errorAlias != null || errorClave != null || errorConfirmacion != null || errorCodigo != null) {
             mensaje = "Revisa los campos marcados"
             return
         }
@@ -75,15 +101,17 @@ class AuthViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             cargando = true
             if (registro) {
-                if (repo.registrarUsuario(alias, clave)) {
-                    Sesion.alias = alias
+                val rol = if (esDocente) Rol.DOCENTE else Rol.ESTUDIANTE
+                if (repo.registrarUsuario(alias, clave, rol)) {
+                    iniciar(rol)
                     onExito()
                 } else {
                     mensaje = "Ese usuario ya existe"
                 }
             } else {
-                if (repo.iniciarSesion(alias, clave)) {
-                    Sesion.alias = alias
+                val usuario = repo.autenticar(alias, clave)
+                if (usuario != null) {
+                    iniciar(usuario.rol)
                     onExito()
                 } else {
                     mensaje = "Usuario o contraseña incorrectos"
@@ -91,5 +119,13 @@ class AuthViewModel(app: Application) : AndroidViewModel(app) {
             }
             cargando = false
         }
+    }
+
+    // La sesión queda guardada: al volver a abrir la app no se pide ingresar de nuevo
+    private fun iniciar(rol: String) {
+        Sesion.alias = alias
+        Sesion.rol = rol
+        prefs?.aliasSesion = alias
+        prefs?.rolSesion = rol
     }
 }

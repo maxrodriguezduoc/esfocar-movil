@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.EsfocarAplicacion" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.EsfocarAplicacion" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/esfocar_fondo</item>
+    </style>
+
+    <!-- Pantalla de bienvenida (Splash Screen API): fondo verde institucional con el emblema -->
+    <style name="Theme.EsfocarAplicacion.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/esfocar_verde</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.EsfocarAplicacion</item>
+    </style>
 </resources>

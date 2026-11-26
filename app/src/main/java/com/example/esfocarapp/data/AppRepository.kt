@@ -1,60 +1,37 @@
 package com.example.esfocarapp.data
 
-import com.example.esfocarapp.data.local.AppDatabase
-import com.example.esfocarapp.data.local.Apunte
 import com.example.esfocarapp.data.local.Documento
-import com.example.esfocarapp.data.local.Intento
+import com.example.esfocarapp.data.local.DocumentoDao
 import com.example.esfocarapp.data.local.Usuario
+import com.example.esfocarapp.data.local.UsuarioDao
+import com.example.esfocarapp.util.Rol
 import com.example.esfocarapp.util.Seguridad
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// El repositorio es el "intermediario": los ViewModels le piden datos a él
-// y él decide de dónde salen (hoy: Room; mañana: Room + API).
-class AppRepository(db: AppDatabase) {
-
-    private val usuarioDao = db.usuarioDao()
-    private val apunteDao = db.apunteDao()
-    private val intentoDao = db.intentoDao()
-    private val documentoDao = db.documentoDao()
-
-    private fun fechaActual(): String {
-        return SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(Date())
-    }
+// Repositorio de datos LOCALES (Room): usuarios y documentos.
+class AppRepository(
+    private val usuarioDao: UsuarioDao,
+    private val documentoDao: DocumentoDao,
+    private val fechaActual: () -> String = ::fechaPorDefecto
+) {
 
     // ---------- Usuarios ----------
-    suspend fun registrarUsuario(alias: String, clave: String): Boolean {
+    suspend fun registrarUsuario(alias: String, clave: String, rol: String = Rol.ESTUDIANTE): Boolean {
         if (usuarioDao.buscarPorAlias(alias) != null) return false   // ya existe
-        usuarioDao.insertar(Usuario(alias = alias, claveHash = Seguridad.hash(clave)))
+        usuarioDao.insertar(Usuario(alias = alias, claveHash = Seguridad.hash(clave), rol = rol))
         return true
     }
 
-    suspend fun iniciarSesion(alias: String, clave: String): Boolean {
+    // Devuelve el usuario si la clave es correcta (así se conoce su rol), o null si no
+    suspend fun autenticar(alias: String, clave: String): Usuario? {
         val usuario = usuarioDao.buscarPorAlias(alias)
-        return usuario != null && usuario.claveHash == Seguridad.hash(clave)
+        return usuario?.takeIf { it.claveHash == Seguridad.hash(clave) }
     }
 
-    // ---------- Apuntes ----------
-    val apuntes: Flow<List<Apunte>> = apunteDao.todos()
-
-    suspend fun guardarApunte(titulo: String, contenido: String) {
-        apunteDao.insertar(Apunte(titulo = titulo, contenido = contenido, fecha = fechaActual()))
-    }
-
-    suspend fun borrarApunte(apunte: Apunte) {
-        apunteDao.eliminar(apunte)
-    }
-
-    // ---------- Resultados de trivias ----------
-    val intentos: Flow<List<Intento>> = intentoDao.todos()
-
-    suspend fun guardarIntento(actividad: String, aciertos: Int, total: Int) {
-        intentoDao.insertar(
-            Intento(actividad = actividad, aciertos = aciertos, total = total, fecha = fechaActual())
-        )
-    }
+    suspend fun iniciarSesion(alias: String, clave: String): Boolean = autenticar(alias, clave) != null
 
     // ---------- Documentos (PDF / Word) ----------
     val documentos: Flow<List<Documento>> = documentoDao.todos()
@@ -67,5 +44,10 @@ class AppRepository(db: AppDatabase) {
 
     suspend fun borrarDocumento(documento: Documento) {
         documentoDao.eliminar(documento)
+    }
+
+    companion object {
+        fun fechaPorDefecto(): String =
+            SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(Date())
     }
 }
