@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Asignatura | DSY1105 Desarrollo de Aplicaciones Móviles – Examen Final Transversal |
+| Asignatura | DSY1105 Desarrollo de Aplicaciones Móviles – EP3 |
 | Caso | 004D · *Repaso, autoevaluación y análisis de casos aplicados para estudiantes en formación* |
-| Integrante | Maximiliano Rodriguez (desarrollo individual, autorizado) |
-| Planificación | Tablero Trello: _[pegar enlace]_ |
+| Integrantes | Maximiliano Rodriguez |
+| Planificación | Tablero Trello: [https://trello.com/invite/b/6ac5334d9b310ede4021076e/ATTIce29801360203fde28c5ceb5dc4837d7B46501CB/maximiliano-rodriguez]|
 | Versión | 2.0 (`versionCode 2`) |
 
 > Todo el contenido (normas, protocolos, preguntas y casos) es **ficticio y de uso académico**. No se usan datos personales reales ni se conecta a sistemas institucionales.
