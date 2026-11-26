@@ -101,7 +101,7 @@ app/src/main/java/com/example/esfocarapp/
 ├── ui/            Pantallas Compose y sistema de componentes (ui/components) y tema (ui/theme)
 └── util/          Validaciones, seguridad, preferencias, conexión, vibración, notificaciones
 backend/           Microservicios Spring Boot 3 (Java 17): ms-contenidos, ms-apuntes, ms-resultados
-release/           APK firmado
+release/           APK y App Bundle (AAB) firmados
 docs/              Capturas y verificación de firma
 ```
 
@@ -192,23 +192,25 @@ Qué se prueba:
 
 Se excluyen de la medición las pantallas Compose y el código que depende directamente de Android.
 
-### Paso 4: APK firmado
+### Paso 4: APK y App Bundle firmados
 ```bash
 ./gradlew :app:assembleRelease       # → app/build/outputs/apk/release/app-release.apk
+./gradlew :app:bundleRelease         # → app/build/outputs/bundle/release/app-release.aab
 ```
 
-## 6. APK firmado y llave
+## 6. APK, App Bundle y llave
 
 | Elemento | Ubicación |
 |---|---|
 | APK firmado (release, R8) | [`release/esfocar-release.apk`](release/esfocar-release.apk) |
+| App Bundle firmado (release, R8), formato para Google Play | [`release/esfocar-release.aab`](release/esfocar-release.aab) |
 | Llave | [`app/esfocar-release.jks`](app/esfocar-release.jks) (alias `esfocar`, RSA 2048) |
 | Configuración de firma | [`keystore.properties`](keystore.properties) + `signingConfigs` en [`app/build.gradle.kts`](app/build.gradle.kts) |
-| Verificación (`apksigner`, `keytool`) | [`docs/firma-apk.txt`](docs/firma-apk.txt) |
+| Verificación (`apksigner`, `jarsigner`, `keytool`) | [`docs/firma-apk.txt`](docs/firma-apk.txt) |
 
 La base de datos local migra de la versión 4 a la 5 (se agrega el rol de usuario) sin perder usuarios, progreso ni apuntes.
 
-El APK se verifica con la firma v2 (`Verified using v2 scheme: true`) y el certificado `CN=Esfocar App, OU=DSY1105, O=Duoc UC`. Se probó en el emulador (Android 17) con los microservicios apagados (estudio completo y apuntes guardados en el teléfono) y luego encendidos (los apuntes y resultados quedaron en las bases de datos de los microservicios).
+El APK se verifica con la firma v2 (`Verified using v2 scheme: true`) y el certificado `CN=Esfocar App, OU=DSY1105, O=Duoc UC`. El App Bundle se firma con la misma llave (`jarsigner -verify`: `jar verified`) y tiene el mismo certificado SHA-256 que el APK. Se probó en el emulador (Android 17) con los microservicios apagados (estudio completo y apuntes guardados en el teléfono) y luego encendidos (los apuntes y resultados quedaron en las bases de datos de los microservicios).
 
 > ⚠️ **Solo académico:** la llave y sus contraseñas se versionan porque la rúbrica lo exige. En un proyecto productivo nunca se suben al repositorio.
 

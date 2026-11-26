@@ -20,3 +20,15 @@ Signer #1 public key MD5 digest: 1734467a63ff69910119c18d7d926813
 
 == keytool -list -v -keystore app/esfocar-release.jks ==
 Nombre de Alias: esfocar
+
+== jarsigner -verify release/esfocar-release.aab ==
+
+jar verified.
+
+== keytool -printcert -jarfile release/esfocar-release.aab ==
+
+Owner: CN=Esfocar App, OU=DSY1105, O=Duoc UC, L=Santiago, C=CL
+Issuer: CN=Esfocar App, OU=DSY1105, O=Duoc UC, L=Santiago, C=CL
+Valid from: Thu Nov 19 19:25:50 GMT-03:00 2026 until: Mon Apr 06 18:25:50 GMT-04:00 2054
+	 SHA256: 61:BB:4D:08:CE:59:49:BC:68:CF:B2:2B:82:27:20:D6:5C:C4:F1:29:09:E4:5D:4A:C2:FB:6A:1A:95:2B:92:F4
+Signature algorithm name: SHA384withRSA
